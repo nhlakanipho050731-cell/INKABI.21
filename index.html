@@ -1,1 +1,165 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10151c">
+<title>INKABI.21 | Gold Intelligence</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#0b1016; --panel:#141c25; --line:#2a3745;
+  --text:#edf3f8; --muted:#99a9b9; --gold:#e5bd68;
+  --red:#ff7474; --green:#7de0ae;
+}
+* { box-sizing:border-box }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font:15px system-ui,-apple-system,sans-serif;
+}
+header { padding:24px 18px 18px; border-bottom:1px solid var(--line) }
+.brand { color:var(--gold); font-weight:850; letter-spacing:2px; font-size:23px }
+.sub { color:var(--muted); font-size:11px; letter-spacing:1.6px; margin-top:5px }
+main { max-width:760px; margin:auto; padding:16px; display:grid; gap:14px }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:17px }
+h2 { font-size:15px; margin:0 0 14px }
+.price { font-size:30px; font-weight:750; margin:8px 0 }
+.muted { color:var(--muted); font-size:13px }
+.status { display:inline-block; padding:6px 10px; border-radius:6px; font-size:12px; font-weight:800; background:#3b2925; color:#ffb5a5 }
+.status.ok { background:#17372b; color:var(--green) }
+.status.warn { background:#3b2925; color:#ffb5a5 }
+.rule { display:flex; justify-content:space-between; gap:10px; padding:11px 0; border-bottom:1px solid var(--line) }
+.rule:last-child { border:0 }
+button { width:100%; padding:13px; border:1px solid var(--gold); border-radius:9px; background:var(--gold); color:#17140d; font-weight:800; font-size:14px; cursor:pointer; margin-top:10px }
+button.secondary { background:transparent; color:var(--text); border-color:var(--line) }
+button:focus-visible { outline:2px solid white; outline-offset:3px }
+.result { white-space:pre-wrap; line-height:1.65; font-size:13px; margin-top:12px }
+footer { text-align:center; padding:8px 20px 28px; color:var(--muted); font-size:11px }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">INKABI.21</div>
+  <div class="sub">XAU/USD MARKET INTELLIGENCE</div>
+</header>
+<main>
+  <section class="card">
+    <h2>MARKET DATA</h2>
+    <span class="status warn" id="feedBadge">UNAVAILABLE</span>
+    <div class="price" id="price">—</div>
+    <div class="muted">XAU/USD · USD per troy ounce</div>
+    <div class="rule"><span>Quote timestamp</span><span id="timestamp">No verified quote</span></div>
+    <div class="rule"><span>Connection</span><span id="connection">Not connected</span></div>
+    <div class="muted" style="margin-top:12px">No live feed is configured. No price is being invented.</div>
+  </section>
+
+  <section class="card">
+    <h2>STRICT SAFETY ENGINE</h2>
+    <span class="status warn" id="decision">NO-GO</span>
+    <div class="rule"><span>Market data verified</span><span>NO</span></div>
+    <div class="rule"><span>Critical inputs complete</span><span>NO</span></div>
+    <div class="rule"><span>Safety engine verified</span><span id="engine">NO</span></div>
+    <p class="muted">Setup approval is blocked until required checks are verified. This prototype does not control MT5 or your broker account.</p>
+  </section>
+
+  <section class="card">
+    <h2>LOCAL FAILURE TESTS</h2>
+    <p class="muted">Simulated checks only. These do not test a real market feed, cloud service, or trading account.</p>
+    <button id="runTests">Run Local Safety Tests</button>
+    <button class="secondary" id="reset">Reset Test Results</button>
+    <div class="result" id="results" aria-live="polite">Tests have not been run.</div>
+  </section>
+
+  <section class="card">
+    <h2>INTEGRATION STATUS</h2>
+    <div class="rule"><span>Market data API</span><span>NOT CONFIGURED</span></div>
+    <div class="rule"><span>Cloud backend</span><span>NOT CONFIGURED</span></div>
+    <div class="rule"><span>Third-party login</span><span>NOT CONFIGURED</span></div>
+    <div class="rule"><span>TradingView / MT5</span><span>NOT CONNECTED</span></div>
+  </section>
+</main>
+<footer>INKABI.21 · SAFETY-FIRST FOUNDATION · NOT FINANCIAL ADVICE</footer>
+<script>
+"use strict";
+
+function evaluateSafety(input) {
+  const required = [
+    input.freshData,
+    input.criticalInputsComplete,
+    input.engineHealthy,
+    input.connectionHealthy
+  ];
+  return {
+    approved: required.every(value => value === true),
+    reasons: [
+      !input.freshData && "Market data is stale or unavailable",
+      !input.criticalInputsComplete && "Critical inputs are missing",
+      !input.engineHealthy && "Safety engine is not healthy",
+      !input.connectionHealthy && "Connection is impaired"
+    ].filter(Boolean)
+  };
+}
+
+function runFailureTests() {
+  const tests = [
+    {
+      name: "Stale market data",
+      input: {freshData:false,criticalInputsComplete:true,engineHealthy:true,connectionHealthy:true},
+      expected: "Block approval"
+    },
+    {
+      name: "Gold reverses after news",
+      input: {freshData:true,criticalInputsComplete:false,engineHealthy:true,connectionHealthy:true},
+      expected: "Block until setup is reassessed"
+    },
+    {
+      name: "Daily loss limit reached",
+      input: {freshData:true,criticalInputsComplete:false,engineHealthy:true,connectionHealthy:true,lossLimitReached:true},
+      expected: "Block new entries"
+    },
+    {
+      name: "Internet connection disappears",
+      input: {freshData:false,criticalInputsComplete:true,engineHealthy:true,connectionHealthy:false},
+      expected: "Block and warn"
+    },
+    {
+      name: "Macro signals conflict",
+      input: {freshData:true,criticalInputsComplete:false,engineHealthy:true,connectionHealthy:true},
+      expected: "Block until conflict is resolved"
+    }
+  ];
+
+  const lines = [];
+  let passed = 0;
+
+  for (const test of tests) {
+    const result = evaluateSafety(test.input);
+    const blocked = result.approved === false;
+    const ok = blocked;
+    if (ok) passed++;
+    lines.push(
+      (ok ? "PASS" : "FAIL") + " — " + test.name +
+      "\nExpected: " + test.expected +
+      "\nObserved: " + (blocked ? "Approval blocked" : "Approval allowed") +
+      (test.input.lossLimitReached ? "\nLoss limit case is currently represented by missing required inputs." : "")
+    );
+  }
+
+  document.getElementById("results").textContent =
+    "SIMULATED TESTS: " + passed + "/" + tests.length + " passed\n\n" +
+    lines.join("\n\n") +
+    "\n\nLIMITATION: These are local logic simulations, not live integration tests. " +
+    "Daily loss handling, setup invalidation, and macro-conflict detection need dedicated implementations and tests.";
+}
+
+document.getElementById("runTests").addEventListener("click", runFailureTests);
+document.getElementById("reset").addEventListener("click", () => {
+  document.getElementById("results").textContent = "Tests have not been run.";
+});
+
+document.getElementById("decision").textContent = "NO-GO";
+</script>
+</body>
+</html>
+
