@@ -1,1 +1,460 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101820">
+<title>INKABI.21</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1117;--panel:#151f29;--line:#2a3945;--gold:#e5bd62;--text:#edf2f6;--muted:#a5b2bd;--green:#69d8a2;--red:#ff8585;--yellow:#ffd477}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+header{padding:20px 15px;background:#101820;border-bottom:1px solid var(--line)}
+h1{color:var(--gold);letter-spacing:3px;margin:0}
+main{max-width:800px;margin:auto;padding:14px}
+nav,.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+button,input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:11px;background:#0d161e;color:var(--text);max-width:100%}
+button{cursor:pointer}
+button.primary{background:var(--gold);color:#17130a;border:0;font-weight:800}
+button:disabled{opacity:.5}
+section{display:none}
+section.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:14px}
+.muted{color:var(--muted);font-size:12px}
+.price{font-size:clamp(34px,9vw,48px);font-weight:800;color:var(--gold)}
+.status{font-weight:800;margin:10px 0}
+.good{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--yellow)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.metric{background:#0d161e;border-radius:8px;padding:10px;overflow-wrap:anywhere}
+.metric strong{display:block;margin-top:4px}
+label{display:block;margin:12px 0 5px;color:var(--muted)}
+input,select,textarea{width:100%}
+textarea{min-height:85px}
+.check{display:flex;align-items:center;gap:9px}
+.check input{width:auto}
+.result{border-bottom:1px solid var(--line);padding:10px 0}
+footer{padding:15px 0;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>INKABI.21</h1>
+<div class="muted">GOLD MARKET INTELLIGENCE · SAFETY FIRST</div>
+<nav>
+<button data-tab="home">Dashboard</button>
+<button data-tab="macro">Macro</button>
+<button data-tab="plan">Trade Plan</button>
+<button data-tab="journal">Journal</button>
+<button data-tab="risk">Risk &amp; Tests</button>
+</nav>
+</header>
+
+<main>
+<section id="home" class="active">
+<div class="card">
+<div class="muted">XAU/USD · PROVIDER QUOTE</div>
+<div class="price" id="goldPrice">—</div>
+<div id="quoteStatus" class="status warn">NOT VERIFIED</div>
+<div class="grid">
+<div class="metric">Provider timestamp<strong id="providerTime">—</strong></div>
+<div class="metric">Quote age<strong id="quoteAge">—</strong></div>
+<div class="metric">Connection<strong id="connection">Checking</strong></div>
+<div class="metric">Last attempt<strong id="lastAttempt">—</strong></div>
+</div>
+<p id="feedMessage" class="muted">Waiting for provider response.</p>
+<div class="actions">
+<button class="primary" id="refreshBtn">Refresh Gold</button>
+<button id="testBtn">Run Local Tests</button>
+</div>
+</div>
+<div class="card">
+<h3>Trading decision</h3>
+<div id="decisionBox" class="status bad">NO-GO · VERIFY DATA</div>
+<p id="healthMessages" class="muted">A price by itself is not a trading signal.</p>
+</div>
+</section>
+
+<section id="macro">
+<div class="card">
+<h2>Macro Monitor</h2>
+<p class="muted">Enter information you have verified. These are not live macro feeds.</p>
+<label for="dxy">DXY direction</label>
+<select id="dxy"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="mixed">Mixed</option></select>
+<label for="yields">US 10-year yield</label>
+<select id="yields"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="mixed">Mixed</option></select>
+<label for="realYields">US 10-year real yield</label>
+<select id="realYields"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="mixed">Mixed</option></select>
+<label for="macroBias">Gold assessment</label>
+<select id="macroBias"><option value="unknown">Unconfirmed</option><option value="bullish">Potentially bullish</option><option value="bearish">Potentially bearish</option><option value="conflict">Conflicting</option></select>
+<label for="macroSource">Source, release time and notes</label>
+<textarea id="macroSource" placeholder="Source, actual vs forecast, time and market reaction"></textarea>
+<div class="actions"><button class="primary" id="saveMacro">Save Assessment</button><button id="clearMacro">Clear</button></div>
+<p id="macroMessage" class="muted">Assessment not independently verified.</p>
+</div>
+</section>
+
+<section id="plan">
+<div class="card">
+<h2>Trade Readiness</h2>
+<p class="muted">This checklist does not place trades or control your broker.</p>
+<label class="check"><input type="checkbox" id="newsClear"> News and event risk checked</label>
+<label class="check"><input type="checkbox" id="strategyConfirmed"> Entry trigger and invalidation identified</label>
+<label class="check"><input type="checkbox" id="accountRiskVerified"> Position size and stop checked</label>
+<label class="check"><input type="checkbox" id="brokerVerified"> Broker price and spread checked</label>
+<label for="setupNotes">Setup notes</label>
+<textarea id="setupNotes" placeholder="Entry, stop, target, invalidation and reasons to stay out"></textarea>
+<div class="actions"><button class="primary" id="savePlan">Save Plan</button><button id="resetPlan">Reset Checklist</button></div>
+<div id="planStatus" class="status warn">NO-GO · INCOMPLETE</div>
+</div>
+</section>
+
+<section id="journal">
+<div class="card">
+<h2>Trade Journal</h2>
+<label for="journalSetup">Setup and context</label>
+<textarea id="journalSetup"></textarea>
+<label for="journalOutcome">Outcome and lesson</label>
+<textarea id="journalOutcome"></textarea>
+<div class="actions"><button class="primary" id="saveJournal">Save Entry</button><button id="exportJournal">Export Journal</button></div>
+<p id="journalMessage" class="muted">Journal entries are stored in this browser if storage is available.</p>
+<div id="journalEntries"></div>
+</div>
+</section>
+
+<section id="risk">
+<div class="card">
+<h2>Daily Risk Control</h2>
+<p class="muted">Local warning only. Not connected to MT5.</p>
+<label for="dailyLimit">Daily loss limit (account currency)</label>
+<input id="dailyLimit" type="number" min="0" step="0.01" placeholder="Enter your limit">
+<label for="dailyLoss">Loss recorded today</label>
+<input id="dailyLoss" type="number" min="0" step="0.01" placeholder="Enter today's loss">
+<div class="actions"><button class="primary" id="checkLoss">Check Risk</button><button id="resetLoss">Clear Loss Input</button></div>
+<div id="lossStatus" class="status warn">NO-GO · ENTER RISK VALUES</div>
+</div>
+<div class="card">
+<h2>Local Safety Tests</h2>
+<p class="muted">These test local decision rules with simulated inputs. They do not prove that live integrations work.</p>
+<button class="primary" id="runTestsAgain">Run All Local Tests</button>
+<div id="testSummary" class="status warn" aria-live="polite">Tests have not run.</div>
+<div id="testResults"></div>
+</div>
+<div class="card">
+<h3>Important limitations</h3>
+<ul>
+<li>Feed availability depends on the provider and browser network permissions.</li>
+<li>Macro information must be entered and checked manually.</li>
+<li>The daily loss warning cannot prevent orders in MT5.</li>
+<li>Never treat a simulation as proof of live-market reliability.</li>
+</ul>
+</div>
+</section>
+
+<footer>INKABI.21 · Decision support only · Verify all prices and orders with your broker.</footer>
+</main>
+
+<script>
+"use strict";
+
+(function(){
+const $=id=>document.getElementById(id);
+const FEED_URL="https://xaus.com/api/v1/spot";
+const MAX_AGE=120000;
+let latestQuote=null;
+let refreshBusy=false;
+
+function status(id,message,type){
+ $(id).textContent=message;
+ $(id).className="status "+type;
+}
+function safeStore(key,value){
+ try{localStorage.setItem(key,JSON.stringify(value));return true}
+ catch(e){return false}
+}
+function safeRead(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?fallback:JSON.parse(value);
+ }catch(e){return fallback}
+}
+function timeText(value){
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?"Invalid timestamp":d.toLocaleString();
+}
+
+/* Navigation */
+document.querySelectorAll("[data-tab]").forEach(button=>{
+ button.addEventListener("click",function(){
+  document.querySelectorAll("main section").forEach(s=>s.classList.remove("active"));
+  $(button.dataset.tab).classList.add("active");
+ });
+});
+
+/* Quote safety rules */
+function quoteIsFresh(timestamp,now,maxAge){
+ const age=now-timestamp;
+ return Number.isFinite(timestamp)&&age>=0&&age<=maxAge;
+}
+function showNoGo(message){
+ status("quoteStatus","UNAVAILABLE · NOT VERIFIED","bad");
+ status("decisionBox","NO-GO · PRICE NOT VERIFIED","bad");
+ $("feedMessage").textContent=message;
+ $("healthMessages").textContent="Do not trade using unavailable or unverified prices.";
+}
+async function refreshGoldFeed(){
+ if(refreshBusy)return;
+ refreshBusy=true;
+ $("lastAttempt").textContent=new Date().toLocaleTimeString();
+ $("connection").textContent=navigator.onLine?"Online":"Offline";
+
+ if(!navigator.onLine){
+  showNoGo("Internet disconnected. Monitoring is impaired.");
+  refreshBusy=false;
+  return;
+ }
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),10000);
+
+ try{
+  const response=await fetch(FEED_URL,{
+   method:"GET",cache:"no-store",signal:controller.signal,
+   headers:{Accept:"application/json"}
+  });
+  if(!response.ok)throw Error("Provider returned HTTP "+response.status);
+  const data=await response.json();
+  const price=Number(data.price);
+  const stamp=Date.parse(data.computed_at);
+
+  if(!Number.isFinite(price)||price<=0||!Number.isFinite(stamp)){
+   throw Error("Invalid price or provider timestamp");
+  }
+  latestQuote={price:price,timestamp:stamp};
+  $("goldPrice").textContent=price.toFixed(2);
+  $("providerTime").textContent=timeText(stamp);
+  $("quoteAge").textContent=Math.round(Math.max(0,Date.now()-stamp)/1000)+" sec";
+
+  if(data.is_stale===true||!quoteIsFresh(stamp,Date.now(),MAX_AGE)){
+   showNoGo("Quote is stale or its timestamp is invalid. Wait for a fresh quote.");
+   return;
+  }
+
+  status("quoteStatus","FRESH · PROVIDER TIMESTAMP","good");
+  status("decisionBox","WAIT · PRICE ALONE IS NOT A SETUP","warn");
+  $("feedMessage").textContent="Provider returned a recent quote. Compare it with your broker.";
+  $("healthMessages").textContent="Confirm market structure, news, spread, macro and risk.";
+ }catch(error){
+  showNoGo("Feed failed: "+error.message+". Network, CORS or provider failure is possible.");
+ }finally{
+  clearTimeout(timeout);
+  refreshBusy=false;
+  $("connection").textContent=navigator.onLine?"Online":"Offline";
+ }
+}
+$("refreshBtn").addEventListener("click",refreshGoldFeed);
+window.addEventListener("offline",()=>{
+ $("connection").textContent="Offline";
+ showNoGo("Internet connection lost. Monitoring is impaired.");
+});
+window.addEventListener("online",()=>{
+ $("connection").textContent="Online · reconnecting";
+ refreshGoldFeed();
+});
+setInterval(()=>{
+ if(latestQuote){
+  const age=Math.max(0,Date.now()-latestQuote.timestamp);
+  $("quoteAge").textContent=Math.round(age/1000)+" sec";
+  if(!quoteIsFresh(latestQuote.timestamp,Date.now(),MAX_AGE)){
+   showNoGo("Quote exceeded the freshness limit. Refresh before considering a trade.");
+  }
+ }
+},5000);
+setInterval(refreshGoldFeed,60000);
+
+/* Risk checks */
+function lossLimitReached(loss,limit){
+ return Number.isFinite(loss)&&Number.isFinite(limit)&&limit>0&&loss>=limit;
+}
+function checkLoss(){
+ const l=$("dailyLimit").value;
+ const x=$("dailyLoss").value;
+ const limit=Number(l),loss=Number(x);
+ if(l===""||x===""||!Number.isFinite(limit)||!Number.isFinite(loss)||limit<=0||loss<0){
+  status("lossStatus","NO-GO · ENTER VALID VALUES","warn");
+  return false;
+ }
+ if(lossLimitReached(loss,limit)){
+  status("lossStatus","LIMIT REACHED · STOP NEW ENTRIES","bad");
+  return false;
+ }
+ status("lossStatus","WITHIN LOCAL LIMIT · KEEP MONITORING","good");
+ return true;
+}
+$("checkLoss").addEventListener("click",checkLoss);
+$("resetLoss").addEventListener("click",()=>{
+ $("dailyLoss").value="";
+ status("lossStatus","NO-GO · ENTER TODAY'S LOSS","warn");
+});
+
+/* Trade checklist */
+function checkPlan(){
+ const ids=["newsClear","strategyConfirmed","accountRiskVerified","brokerVerified"];
+ const checksOK=ids.every(id=>$(id).checked);
+ const valuesPresent=$("dailyLimit").value!==""&&$("dailyLoss").value!=="";
+ const riskOK=valuesPresent&&checkLoss();
+ const quoteOK=latestQuote&&quoteIsFresh(latestQuote.timestamp,Date.now(),MAX_AGE);
+ const ready=checksOK&&riskOK&&navigator.onLine&&Boolean(quoteOK);
+ status("planStatus",ready?
+  "CHECKLIST COMPLETE · VERIFY WITH BROKER":
+  "NO-GO · CHECKLIST, RISK OR DATA INCOMPLETE",ready?"good":"bad");
+ return ready;
+}
+$("savePlan").addEventListener("click",()=>{
+ const ids=["newsClear","strategyConfirmed","accountRiskVerified","brokerVerified"];
+ const plan={checks:{},notes:$("setupNotes").value,savedAt:new Date().toISOString()};
+ ids.forEach(id=>plan.checks[id]=$(id).checked);
+ if(!safeStore("inkabi21_plan",plan)){
+  status("planStatus","COULD NOT SAVE · STORAGE UNAVAILABLE","bad");return;
+ }
+ checkPlan();
+});
+$("resetPlan").addEventListener("click",()=>{
+ ["newsClear","strategyConfirmed","accountRiskVerified","brokerVerified"].forEach(id=>$(id).checked=false);
+ $("setupNotes").value="";
+ status("planStatus","NO-GO · CHECKLIST INCOMPLETE","warn");
+});
+
+/* Macro notes */
+$("saveMacro").addEventListener("click",()=>{
+ const data={
+  dxy:$("dxy").value,yields:$("yields").value,
+  realYields:$("realYields").value,bias:$("macroBias").value,
+  source:$("macroSource").value,savedAt:new Date().toISOString()
+ };
+ $("macroMessage").textContent=safeStore("inkabi21_macro",data)?
+  "Saved locally. Verify all sources and timestamps yourself.":
+  "Storage unavailable. Copy your notes somewhere safe.";
+});
+$("clearMacro").addEventListener("click",()=>{
+ ["dxy","yields","realYields","macroBias"].forEach(id=>$(id).selectedIndex=0);
+ $("macroSource").value="";
+ $("macroMessage").textContent="Inputs cleared.";
+});
+
+/* Journal */
+function getJournal(){
+ const entries=safeRead("inkabi21_journal",[]);
+ return Array.isArray(entries)?entries:[];
+}
+function renderJournal(){
+ const box=$("journalEntries");
+ box.replaceChildren();
+ getJournal().slice().reverse().forEach(entry=>{
+  const row=document.createElement("div");
+  row.className="result";
+  const title=document.createElement("strong");
+  title.textContent=timeText(entry.savedAt);
+  const body=document.createElement("p");
+  body.textContent="Setup: "+entry.setup+" | Outcome: "+entry.outcome;
+  row.append(title,body);
+  box.append(row);
+ });
+}
+$("saveJournal").addEventListener("click",()=>{
+ const setup=$("journalSetup").value.trim();
+ const outcome=$("journalOutcome").value.trim();
+ if(!setup&&!outcome){
+  $("journalMessage").textContent="Enter a setup or lesson first.";return;
+ }
+ const entries=getJournal();
+ entries.push({setup:setup,outcome:outcome,savedAt:new Date().toISOString()});
+ if(!safeStore("inkabi21_journal",entries)){
+  $("journalMessage").textContent="Could not save. Copy this entry separately.";return;
+ }
+ $("journalSetup").value="";
+ $("journalOutcome").value="";
+ renderJournal();
+ $("journalMessage").textContent="Journal entry saved locally.";
+});
+$("exportJournal").addEventListener("click",()=>{
+ try{
+  const blob=new Blob([JSON.stringify(getJournal(),null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="inkabi21-journal.json";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }catch(e){
+  $("journalMessage").textContent="Export failed. Check your browser permissions.";
+ }
+});
+
+/* Local simulations use real rule functions with controlled sample inputs. */
+function reassessBias(originalBias,newEvidence){
+ if(newEvidence==="bullish"||newEvidence==="bearish")return newEvidence;
+ return "unconfirmed";
+}
+function signalsConflict(signals){
+ return signals.includes("bullish")&&signals.includes("bearish");
+}
+function runLocalTests(){
+ const results=[];
+ function test(name,fn,detail){
+  try{
+   const pass=fn()===true;
+   results.push({name:name,pass:pass,detail:detail});
+  }catch(e){
+   results.push({name:name,pass:false,detail:detail+" Error: "+e.message});
+  }
+ }
+
+ test("Stale market data",
+  ()=>!quoteIsFresh(Date.now()-180000,Date.now(),MAX_AGE),
+  "Checks whether a quote older than the freshness limit is rejected.");
+
+ test("Gold reverses after news",
+  ()=>reassessBias("bullish","bearish")==="bearish",
+  "Checks that new bearish evidence can replace an earlier bullish bias.");
+
+ test("Daily loss limit",
+  ()=>lossLimitReached(100,100)&&!lossLimitReached(99,100),
+  "Checks both a reached limit and a loss below the limit.");
+
+ test("Internet disconnects",
+  ()=>navigator.onLine===false||typeof navigator.onLine==="boolean",
+  "Checks that the browser exposes an online/offline state. This does not disconnect the network.");
+
+ test("Conflicting macro signals",
+  ()=>signalsConflict(["bullish","bearish"]),
+  "Checks that opposing inputs are recognised as conflicting.");
+
+ const box=$("testResults");
+ box.replaceChildren();
+ let passed=0;
+ results.forEach(result=>{
+  if(result.pass)passed++;
+  const row=document.createElement("div");
+  row.className="result";
+  const heading=document.createElement("strong");
+  heading.className=result.pass?"good":"bad";
+  heading.textContent=(result.pass?"PASS · ":"FAIL · ")+result.name;
+  const detail=document.createElement("div");
+  detail.className="muted";
+  detail.textContent=result.detail;
+  row.append(heading,detail);
+  box.append(row);
+ });
+ $("testSummary").textContent=passed+" of "+results.length+
+  " local simulation checks passed. These are not live integration tests.";
+ $("testSummary").className="status "+(passed===results.length?"good":"bad");
+}
+$("testBtn").addEventListener("click",runLocalTests);
+$("runTestsAgain").addEventListener("click",runLocalTests);
+
+renderJournal();
+refreshGoldFeed();
+})();
+</script>
+</body>
+  </html>
+  
