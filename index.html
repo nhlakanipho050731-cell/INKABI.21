@@ -64,8 +64,8 @@ footer{padding:15px 0;color:var(--muted);font-size:12px}
 </div>
 <p id="feedMessage" class="muted">Waiting for provider response.</p>
 <div class="actions">
-<button class="primary" id="refreshBtn">Refresh Gold</button>
-<button id="testBtn">Run Local Tests</button>
+<button type="button" class="primary" onclick="document.getElementById('testSummary').textContent='BUTTON WORKS — direct click verified';document.getElementById('testSummary').style.color='#69d8a2'">Test Button</button>
+<button type="button" onclick="document.getElementById('testSummary').textContent='BUTTON WORKS — direct click verified';document.getElementById('testSummary').style.color='#69d8a2'">Test Button</button>
 </div>
 </div>
 <div class="card">
