@@ -136,7 +136,23 @@ footer{padding:15px 0;color:var(--muted);font-size:12px}
 <div class="card">
 <h2>Local Safety Tests</h2>
 <p class="muted">These test local decision rules with simulated inputs. They do not prove that live integrations work.</p>
-<button class="primary" id="runTestsAgain">Run All Local Tests</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var button = document.getElementById("testBtn");
+  if (!button) return;
+
+  button.addEventListener("click", function () {
+    var summary = document.getElementById("testSummary");
+    if (summary) {
+      summary.textContent = "BUTTON WORKS — click event received.";
+    } else {
+      alert("BUTTON WORKS — click event received.");
+    }
+  });
+});
+</script>
+
 <div id="testSummary" class="status warn" aria-live="polite">Tests have not run.</div>
 <div id="testResults"></div>
 </div>
