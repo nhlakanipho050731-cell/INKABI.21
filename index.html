@@ -848,6 +848,34 @@
       if (navigator.onLine) refreshGoldFeed();
       else updateNetworkStatus();
     }, CONFIG.refreshMs);
+ function inkabiSafetyGate(quote) {
+  const maxAgeSeconds = 120;
+
+  if (!navigator.onLine) {
+    return { status: "NO-GO", reason: "Internet unavailable" };
+  }
+
+  if (!quote || !Number.isFinite(Number(quote.price)) ||
+      Number(quote.price) <= 0) {
+    return { status: "NO-GO", reason: "Invalid gold price" };
+  }
+
+  const timestamp = Date.parse(
+    quote.provider_timestamp || quote.computed_at || ""
+  );
+
+  if (!Number.isFinite(timestamp)) {
+    return { status: "NO-GO", reason: "Provider timestamp missing" };
+  }
+
+  const ageSeconds = (Date.now() - timestamp) / 1000;
+
+  if (ageSeconds < 0 || ageSeconds > maxAgeSeconds) {
+    return { status: "NO-GO", reason: "Gold data stale or unverified" };
+  }
+
+  return { status: "DATA OK", reason: "Quote passes basic checks" };
+    }
   </script>
 </body>
 </html>
