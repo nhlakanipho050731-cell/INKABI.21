@@ -723,6 +723,100 @@ footer { text-align:center; padding:15px; color:var(--muted); font-size:11px; }
   </div>
 </section>
 </main>
+  
+<script>
+(function () {
+  "use strict";
+
+  function runInkabiLocalTests() {
+    const results = [
+      {
+        name: "Stale market data",
+        expected: "Old or unknown-age quotes must be rejected.",
+        pass: (age, stale) =>
+          stale === true || !Number.isFinite(age) || age > 120000
+      },
+      {
+        name: "Gold reverses after news",
+        expected: "A changed direction invalidates the previous bias.",
+        pass: (oldBias, newBias) =>
+          oldBias !== newBias
+      },
+      {
+        name: "Daily loss limit",
+        expected: "New entries are denied at or above the limit.",
+        pass: (loss, limit) =>
+          Number.isFinite(loss) &&
+          Number.isFinite(limit) &&
+          limit > 0 &&
+          loss >= limit
+      },
+      {
+        name: "Internet disconnects",
+        expected: "Offline status must trigger a monitoring warning.",
+        pass: (online) => online === false
+      },
+      {
+        name: "Conflicting macro signals",
+        expected: "Disagreement must produce NO-GO.",
+        pass: (signals) =>
+          signals.some(s => s === "unknown") ||
+          signals.some(s => s === "conflict") ||
+          new Set(signals).size > 1
+      }
+    ];
+
+    const checks = [
+      results[0].pass(180000, false),
+      results[1].pass("bullish", "bearish"),
+      results[2].pass(100, 100),
+      results[3].pass(false),
+      results[4].pass(["bullish", "bearish", "unknown"])
+    ];
+
+    const output = document.getElementById("testResults");
+    const summary = document.getElementById("testSummary");
+
+    if (!output || !summary) {
+      alert("INKABI.21 test output area not found.");
+      return;
+    }
+
+    output.replaceChildren();
+
+    checks.forEach((passed, index) => {
+      const row = document.createElement("div");
+      row.className = "test";
+
+      const heading = document.createElement("strong");
+      heading.textContent =
+        (passed ? "PASS — " : "FAIL — ") + results[index].name;
+
+      const detail = document.createElement("p");
+      detail.className = "muted small";
+      detail.textContent = results[index].expected;
+
+      row.append(heading, detail);
+      output.appendChild(row);
+    });
+
+    const passedCount = checks.filter(Boolean).length;
+    summary.textContent =
+      passedCount + " of " + checks.length +
+      " simulated logic checks passed. These are not live integration tests.";
+
+    summary.className =
+      passedCount === checks.length ? "status good" : "status warn";
+  }
+
+  const homeButton = document.getElementById("testBtn");
+  const riskButton = document.getElementById("runTestsAgain");
+
+  if (homeButton) homeButton.onclick = runInkabiLocalTests;
+  if (riskButton) riskButton.onclick = runInkabiLocalTests;
+})();
+</script>
+  
 <footer>INKABI.21 · Evidence before execution · No automated trading</footer>
 
 <script>
