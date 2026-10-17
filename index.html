@@ -64,6 +64,7 @@ footer{padding:15px 0;color:var(--muted);font-size:12px}
 <p id="feedMessage" class="muted">Waiting for provider response.</p>
 <div class="actions">
 <button class="primary" id="refreshBtn">Refresh Gold</button>
+
 <button id="testBtn">Run Local Tests</button>
 </div>
 </div>
@@ -454,6 +455,23 @@ renderJournal();
 refreshGoldFeed();
 })();
 </script>
+ 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var button = document.getElementById("testBtn");
+  if (!button) return;
+
+  button.addEventListener("click", function () {
+    var summary = document.getElementById("testSummary");
+    if (summary) {
+      summary.textContent = "BUTTON WORKS — click event received.";
+    } else {
+      alert("BUTTON WORKS — click event received.");
+    }
+  });
+});
+</script>
+ 
 </body>
   </html>
   
