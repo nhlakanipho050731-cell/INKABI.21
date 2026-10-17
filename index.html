@@ -4,709 +4,850 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101820">
+  <meta name="theme-color" content="#10151e">
+  <meta name="description" content="INKABI.21 gold market monitoring and safety dashboard">
   <title>INKABI.21 | Gold Intelligence</title>
+
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b1015;
-      --panel: #141c24;
-      --border: #293541;
-      --text: #f0f3f5;
-      --muted: #9aabb9;
-      --gold: #d9b66d;
+      --bg: #0b0f15;
+      --panel: #141b25;
+      --panel2: #101720;
+      --border: #293443;
+      --text: #f0f3f7;
+      --muted: #a4afbd;
+      --gold: #e6bd65;
+      --green: #69d6a0;
       --red: #ff7777;
-      --green: #70d7a0;
+      --orange: #ffbf69;
+      --blue: #91bfff;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 20px 14px 40px;
       background: var(--bg);
       color: var(--text);
-      font-family: system-ui, Arial, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
     }
 
-    main { max-width: 760px; margin: auto; }
+    header {
+      padding: 24px 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #171e29, #0b0f15);
+    }
 
-    header { margin: 6px 0 22px; }
+    .wrap {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
 
     .brand {
       color: var(--gold);
-      font-size: 12px;
-      letter-spacing: 3px;
-      font-weight: 800;
+      font-size: 27px;
+      font-weight: 850;
+      letter-spacing: 2px;
     }
 
-    h1 { font-size: 29px; margin: 7px 0; }
-    h2 { font-size: 17px; margin: 0 0 15px; }
-    p { line-height: 1.5; }
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      margin-top: 3px;
+    }
 
-    .muted, .small { color: var(--muted); }
-    .small { font-size: 12px; line-height: 1.5; }
+    main {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
 
     .panel {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 15px;
       padding: 17px;
-      margin: 13px 0;
+      min-width: 0;
     }
 
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      font-size: 11px;
+      font-weight: 750;
     }
 
     .price {
-      color: var(--gold);
-      font-size: clamp(30px, 9vw, 45px);
-      font-weight: 750;
+      font-size: clamp(31px, 8vw, 43px);
+      font-weight: 800;
+      letter-spacing: -.8px;
+      margin: 6px 0 0;
       overflow-wrap: anywhere;
-      margin: 10px 0;
     }
 
-    .pill {
-      display: inline-block;
+    .currency {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: var(--panel2);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 11px;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .metric-value {
+      font-size: 14px;
+      font-weight: 750;
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
       padding: 6px 10px;
-      font-size: 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
       font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .good { color: var(--green); }
+    .bad { color: var(--red); }
+    .warn { color: var(--orange); }
+    .info { color: var(--blue); }
+
+    .safety-banner {
+      border: 1px solid #803f43;
+      background: #28181d;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .safety-title {
+      font-size: 25px;
+      font-weight: 900;
+      color: var(--red);
       letter-spacing: 1px;
     }
 
-    .warn { color: var(--gold); }
-    .bad { color: var(--red); }
-    .good { color: var(--green); }
+    .safety-banner p {
+      margin: 5px 0 0;
+      font-size: 13px;
+      color: #f0c9cb;
+    }
 
-    .decision {
-      font-size: 30px;
-      font-weight: 900;
-      color: var(--red);
-      margin: 8px 0;
+    .notice {
+      border-left: 3px solid var(--gold);
+      background: #201e18;
+      padding: 11px 12px;
+      color: #e6d8b5;
+      font-size: 12px;
+      border-radius: 0 8px 8px 0;
     }
 
     button {
+      background: var(--gold);
+      color: #17140d;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 15px;
       width: 100%;
-      min-height: 46px;
-      border-radius: 9px;
-      border: 1px solid #5b4b2d;
-      background: #28251d;
-      color: var(--gold);
       font-size: 14px;
-      font-weight: 750;
-      padding: 12px;
-      margin: 5px 0;
+      font-weight: 850;
       cursor: pointer;
     }
 
-    button:disabled { opacity: .55; cursor: wait; }
-
-    .test {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      overflow-wrap: anywhere;
+    button:disabled {
+      opacity: .55;
+      cursor: wait;
     }
 
-    .test:last-child { border-bottom: 0; }
+    button.secondary {
+      color: var(--text);
+      background: #202b39;
+      border: 1px solid var(--border);
+    }
 
-    .test-result { font-weight: 800; }
-    .warning {
-      border-left: 3px solid var(--gold);
-      padding-left: 12px;
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .test-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .test-item {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .test-item strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .test-pass { border-left: 3px solid var(--green); }
+    .test-fail { border-left: 3px solid var(--red); }
+
+    .small-print {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
     }
 
     footer {
-      margin-top: 20px;
-      font-size: 11px;
-      color: var(--muted);
+      padding: 5px 16px 28px;
       text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media (min-width: 650px) {
+      main { grid-template-columns: 1fr 1fr; }
+      .wide { grid-column: 1 / -1; }
     }
   </style>
 </head>
 
 <body>
-<main>
   <header>
-    <div class="brand">INKABI.21</div>
-    <h1>Gold Intelligence</h1>
-    <p class="muted">Market monitoring · Reliability · Risk awareness</p>
+    <div class="wrap">
+      <div class="brand">INKABI.21</div>
+      <div class="subtitle">GOLD MARKET INTELLIGENCE · SAFETY FOUNDATION</div>
+    </div>
   </header>
 
-  <section class="panel">
-    <div class="row">
-      <h2>Gold market feed</h2>
-      <span id="feedBadge" class="pill bad">UNAVAILABLE</span>
-    </div>
+  <main class="wrap">
+    <section class="panel wide">
+      <div class="eyebrow">Trading permission status</div>
+      <div class="safety-banner" style="margin-top:10px">
+        <div class="safety-title" id="tradeStatus">NO-GO</div>
+        <p id="safetyReason">Live trading permission is disabled until all required checks are independently verified.</p>
+      </div>
+      <div class="notice" style="margin-top:12px">
+        INKABI.21 is a monitoring and decision-support tool. It does not place orders or block orders inside MT5.
+      </div>
+    </section>
 
-    <div id="goldPrice" class="price">—</div>
-    <div id="quoteState" class="small">No verified quote available.</div>
-    <p id="connectionState" class="small">Checking connection…</p>
-    <p id="lastVerified" class="small">
-      Last verified update: none in this session
-    </p>
-    <p class="small">
-      Feed: xaus.com · Spot USD per troy ounce.
-      Provider data and broker pricing may differ.
-    </p>
-    <button id="refreshButton">Refresh gold feed</button>
-  </section>
+    <section class="panel">
+      <div class="eyebrow">Gold spot reference · XAU/USD</div>
+      <div class="price" id="goldPrice">— <span class="currency">USD/oz</span></div>
+      <div style="margin-top:12px">
+        <span class="status warn" id="feedStatus">WAITING FOR DATA</span>
+      </div>
+      <div class="muted" style="margin-top:9px" id="priceNote">
+        No quote has been verified by this app yet.
+      </div>
+      <div class="muted" style="margin-top:5px" id="sourceTime">Last accepted update: —</div>
+      <div class="muted" style="margin-top:5px" id="quoteAge">Quote age: —</div>
+      <div class="button-row">
+        <button id="refreshButton" type="button">Refresh gold feed</button>
+        <button id="testButton" class="secondary" type="button">Run local tests</button>
+      </div>
+    </section>
 
-  <section class="panel">
-    <h2>Safety engine</h2>
-    <div id="decision" class="decision">NO-GO</div>
-    <p id="decisionReason" class="small">
-      Waiting for verified market data.
-    </p>
-    <div class="row">
-      <span class="muted">Market data verified</span>
-      <strong id="verifiedState" class="bad">NO</strong>
-    </div>
-    <div class="row">
-      <span class="muted">Critical inputs complete</span>
-      <strong class="bad">NO</strong>
-    </div>
-    <div class="row">
-      <span class="muted">Broker risk controls verified</span>
-      <strong class="bad">NO</strong>
-    </div>
-    <p class="small warning">
-      NO-GO is a safety status, not a trading signal. This website does not
-      connect to MT5, place orders, calculate your real account equity, or
-      enforce your broker's daily loss limit. Do not treat this prototype
-      as permission to trade.
-    </p>
-  </section>
+    <section class="panel">
+      <h2>System health</h2>
+      <div class="grid">
+        <div class="metric">
+          <div class="eyebrow">Internet</div>
+          <div class="metric-value" id="networkStatus">Checking</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Feed verification</div>
+          <div class="metric-value" id="verificationStatus">UNVERIFIED</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Refresh cycle</div>
+          <div class="metric-value">60 seconds</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Last attempt</div>
+          <div class="metric-value" id="attemptTime">—</div>
+        </div>
+      </div>
+      <p class="small-print" style="margin-bottom:0">
+        Freshness means the feed's timestamp passed basic checks. It does not independently prove price accuracy or broker-price matching.
+      </p>
+    </section>
 
-  <section class="panel">
-    <h2>Reliability checks</h2>
-    <div class="row">
-      <span class="muted">Internet status</span>
-      <strong id="networkState">Checking</strong>
-    </div>
-    <div class="row">
-      <span class="muted">Refresh in progress</span>
-      <strong id="refreshState">No</strong>
-    </div>
-    <div class="row">
-      <span class="muted">Last attempt</span>
-      <strong id="lastAttempt">Not started</strong>
-    </div>
-    <p class="small">
-      Automatic refresh runs every 60 seconds while this page is active.
-      Android may pause background browser activity.
-    </p>
-  </section>
+    <section class="panel">
+      <h2>Risk safeguards</h2>
+      <div class="grid">
+        <div class="metric">
+          <div class="eyebrow">Daily loss rule</div>
+          <div class="metric-value" id="lossStatus">NOT CONFIGURED</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Broker connection</div>
+          <div class="metric-value">NOT CONNECTED</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Macro confirmation</div>
+          <div class="metric-value">NOT VERIFIED</div>
+        </div>
+        <div class="metric">
+          <div class="eyebrow">Order execution</div>
+          <div class="metric-value">DISABLED</div>
+        </div>
+      </div>
+      <p class="small-print">
+        The loss-limit check below is a local demonstration only. It is not connected to your account balance or MT5 and cannot stop real orders.
+      </p>
+    </section>
 
-  <section class="panel">
-    <h2>Local safety failure tests</h2>
-    <p class="small">
-      These tests simulate safety-engine inputs. They do not test the live
-      provider, your actual internet connection, MT5, or a real trading account.
-    </p>
-    <button id="runTestsButton">Run local safety tests</button>
-    <button id="resetTestsButton">Reset test results</button>
-    <div id="testSummary" class="small">Tests have not been run.</div>
-    <div id="testResults"></div>
-  </section>
+    <section class="panel">
+      <h2>Local daily-loss simulation</h2>
+      <label class="muted" for="lossLimit">Your daily loss limit (account currency)</label>
+      <input id="lossLimit" type="number" min="0.01" step="0.01"
+        placeholder="e.g. 200" style="width:100%;margin:6px 0 12px;padding:11px;background:#0b0f15;color:#fff;border:1px solid #293443;border-radius:8px">
+      <label class="muted" for="lossUsed">Loss used today (same currency)</label>
+      <input id="lossUsed" type="number" min="0" step="0.01"
+        placeholder="e.g. 200" style="width:100%;margin:6px 0 12px;padding:11px;background:#0b0f15;color:#fff;border:1px solid #293443;border-radius:8px">
+      <button id="checkLossButton" class="secondary" type="button">Check simulated loss limit</button>
+      <div class="metric-value" id="lossResult" style="margin-top:12px">Not checked</div>
+      <p class="small-print">
+        This simulation does not persist as an authoritative daily ledger and does not connect to your broker. Recheck manually; never rely on it to prevent financial loss.
+      </p>
+    </section>
 
-  <section class="panel">
-    <h2>Integration status</h2>
-    <div class="row"><span class="muted">Market API</span><strong>PUBLIC FEED ONLY</strong></div>
-    <div class="row"><span class="muted">Secure backend</span><strong>NOT CONFIGURED</strong></div>
-    <div class="row"><span class="muted">Third-party login</span><strong>NOT REQUIRED</strong></div>
-    <div class="row"><span class="muted">TradingView</span><strong>NOT CONNECTED</strong></div>
-    <div class="row"><span class="muted">MT5</span><strong>NOT CONNECTED</strong></div>
-    <p class="small">
-      GitHub Pages is a static website host. Do not put secret API keys,
-      passwords, or broker credentials in this file.
-    </p>
-  </section>
+    <section class="panel wide">
+      <h2>Automated safety tests</h2>
+      <div class="muted">
+        These tests exercise local decision rules using simulated data. They do not test the external API, live network failure, MT5, or real account controls.
+      </div>
+      <div style="margin-top:12px">
+        <span class="status warn" id="testSummary">NOT RUN</span>
+      </div>
+      <div id="testResults" class="test-list">
+        <div class="test-item">Tests have not been run in this browser session.</div>
+      </div>
+    </section>
 
-  <footer>
-    INKABI.21 · Safety-first prototype · Never rely on unverified quotes
-  </footer>
-</main>
+    <section class="panel wide">
+      <h2>Operational limitations</h2>
+      <ul class="small-print">
+        <li>Prices are reference data and may differ from your broker's XAU/USD price.</li>
+        <li>Economic news, DXY, real yields and macro alignment are not yet connected or independently verified.</li>
+        <li>A phone with no internet cannot receive fresh market data. The last accepted quote must never be treated as live.</li>
+        <li>Local browser tests are not proof that the complete application has passed real-world failure testing.</li>
+        <li>Never use this page as the sole basis for a trading decision.</li>
+      </ul>
+    </section>
+  </main>
 
-<script>
-"use strict";
+  <footer>INKABI.21 · Safety-first foundation · No trade execution</footer>
 
-const CONFIG = Object.freeze({
-  feedUrl: "https://xaus.com/api/v1/spot",
-  refreshIntervalMs: 60000,
-  requestTimeoutMs: 10000,
-  maxQuoteAgeSeconds: 120,
-  maxFutureSeconds: 60
-});
+  <script>
+    "use strict";
 
-const $ = id => document.getElementById(id);
-
-let refreshInProgress = false;
-let refreshTimer = null;
-let lastVerifiedTimestamp = null;
-let consecutiveFailures = 0;
-
-function formatTime(date) {
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "medium"
-  }).format(date);
-}
-
-function setStatus(element, text, className) {
-  element.textContent = text;
-  element.className = className || "";
-}
-
-function setNoGo(reason) {
-  $("decision").textContent = "NO-GO";
-  $("decisionReason").textContent = reason;
-  $("verifiedState").textContent = "NO";
-  $("verifiedState").className = "bad";
-}
-
-function showUnavailable(message) {
-  // Never leave an unverified quote displayed as the current live price.
-  $("goldPrice").textContent = "—";
-  $("feedBadge").textContent = "UNAVAILABLE";
-  $("feedBadge").className = "pill bad";
-  $("quoteState").textContent = message;
-  setNoGo(message);
-
-  if (lastVerifiedTimestamp) {
-    $("lastVerified").textContent =
-      "Last successful verification: " +
-      formatTime(lastVerifiedTimestamp) +
-      ". Current quote is not verified.";
-  } else {
-    $("lastVerified").textContent =
-      "Last verified update: none in this session.";
-  }
-}
-
-
-function validateQuote(data, nowMs = Date.now()) {
-  if (!data || typeof data !== "object") {
-    return { ok: false, reason: "Invalid response format." };
-  }
-
-  const price = Number(data.spot_usd_oz);
-  const priceTime = Date.parse(data.price_as_of || "");
-  const responseTime = Date.parse(data.updated_at || "");
-  const stateTime = Date.parse(data.data_state?.as_of || "");
-
-  if (!Number.isFinite(price) || price <= 0) {
-    return { ok: false, reason: "Invalid gold price." };
-  }
-
-  if (
-    data.stale === true ||
-    data.data_state?.status !== "fresh"
-  ) {
-    return { ok: false, reason: "Provider data is not fresh." };
-  }
-
-  for (const [label, timestamp] of [
-    ["price_as_of", priceTime],
-    ["updated_at", responseTime],
-    ["data_state.as_of", stateTime]
-  ]) {
-    if (!Number.isFinite(timestamp)) {
-      return { ok: false, reason: "Missing or invalid " + label };
-    }
-
-    const ageSeconds = (nowMs - timestamp) / 1000;
-
-    if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
-      return { ok: false, reason: label + " is stale." };
-    }
-
-    if (ageSeconds < -CONFIG.maxFutureSeconds) {
-      return { ok: false, reason: label + " is in the future." };
-    }
-  }
-
-  return {
-    ok: true,
-    price,
-    timestamp: priceTime,
-    ageSeconds: Math.max(0, (nowMs - priceTime) / 1000)
-  };
-}
- };
-  }
-
-  const price = Number(data.spot_usd_oz);
-  const rawTime = data.price_as_of || data.updated_at;
-  const timestamp = Date.parse(rawTime);
-
-  if (!Number.isFinite(price) || price <= 0) {
-    return { ok: false, reason: "Invalid or missing gold price." };
-  }
-
-  if (!rawTime || !Number.isFinite(timestamp)) {
-    return { ok: false, reason: "Missing or invalid quote timestamp." };
-  }
-
-  const ageSeconds = (nowMs - timestamp) / 1000;
-
-  if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
-    return { ok: false, reason: "Quote is stale." };
-  }
-
-  if (ageSeconds < -CONFIG.maxFutureSeconds) {
-    return { ok: false, reason: "Quote timestamp is in the future." };
-  }
-
-  if (data.stale === true) {
-    return { ok: false, reason: "Provider marks the quote stale." };
-  }
-
-  if (
-    !data.data_state ||
-    data.data_state.status !== "fresh"
-  ) {
-    return {
-      ok: false,
-      reason: "Provider freshness status is missing or unverified."
-    };
-  }
-
-  return {
-    ok: true,
-    price,
-    timestamp,
-    ageSeconds: Math.max(0, ageSeconds)
-  };
-}
-
-async function refreshGoldFeed() {
-  // Prevent overlapping requests.
-  if (refreshInProgress) return;
-
-  refreshInProgress = true;
-  $("refreshButton").disabled = true;
-  $("refreshState").textContent = "Yes";
-  $("lastAttempt").textContent = formatTime(new Date());
-  $("feedBadge").textContent = "CHECKING";
-  $("feedBadge").className = "pill warn";
-
-  if (!navigator.onLine) {
-    consecutiveFailures++;
-    showUnavailable("Device reports no internet connection.");
-    $("connectionState").textContent =
-      "OFFLINE — monitoring is impaired.";
-    finishRefresh();
-    return;
-  }
-
-  $("connectionState").textContent =
-    "Online locally; verifying market feed…";
-
-  const controller = new AbortController();
-  let timedOut = false;
-
-  const timeoutId = setTimeout(() => {
-    timedOut = true;
-    controller.abort();
-  }, CONFIG.requestTimeoutMs);
-
-  try {
-    const response = await fetch(
-  CONFIG.feedUrl + "?fresh=" + Date.now(),
-  {
-      method: "GET",
-      cache: "no-store",
-      signal: controller.signal,
-      headers: { "Accept": "application/json" }
+    const CONFIG = Object.freeze({
+      feedUrl: "https://xaus.com/api/v1/spot",
+      refreshMs: 60000,
+      timeoutMs: 10000,
+      maxQuoteAgeSeconds: 120,
+      maxFutureSeconds: 60
     });
 
-    if (!response.ok) {
-      throw new Error("Feed HTTP status " + response.status);
+    let refreshInProgress = false;
+    let lastAcceptedQuote = null;
+    let lastAttemptAt = null;
+    let refreshTimer = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function formatTime(timestamp) {
+      if (!Number.isFinite(timestamp)) return "—";
+      return new Date(timestamp).toLocaleString();
     }
 
-    const data = await response.json();
-    const result = validateQuote(data);
-
-    if (!result.ok) {
-      throw new Error(result.reason);
+    function setFeedStatus(label, kind) {
+      const el = $("feedStatus");
+      el.textContent = label;
+      el.className = "status " + kind;
     }
 
-    consecutiveFailures = 0;
-    lastVerifiedTimestamp = new Date(result.timestamp);
-
-    $("goldPrice").textContent = result.price.toLocaleString(
-      undefined,
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-    );
-
-    $("feedBadge").textContent = "SOURCE REPORTS FRESH";
-    $("feedBadge").className = "pill warn";
-    $("quoteState").textContent =
-      "Timestamp validated · quote age " +
-      Math.round(result.ageSeconds) + " seconds.";
-
-    $("lastVerified").textContent =
-      "Last successful verification: " +
-      formatTime(lastVerifiedTimestamp);
-
-    $("connectionState").textContent =
-      "Feed request succeeded. Broker price not independently verified.";
-
-    // Fresh market data alone is not enough to authorize a trade.
-    setNoGo(
-      "Quote freshness checked. Strategy, macro inputs, and account risk " +
-      "controls are not verified; trading approval remains blocked."
-    );
-  } catch (error) {
-    consecutiveFailures++;
-
-    const reason = timedOut
-      ? "Feed request timed out after 10 seconds."
-      : (error && error.message
-          ? error.message
-          : "Unknown feed error.");
-
-    showUnavailable(reason);
-
-    $("connectionState").textContent = navigator.onLine
-      ? "Internet appears available, but the feed failed. Monitoring is impaired."
-      : "OFFLINE — monitoring is impaired.";
-
-    $("feedBadge").textContent = timedOut ? "TIMEOUT" : "UNAVAILABLE";
-    $("feedBadge").className = "pill bad";
-  } finally {
-    clearTimeout(timeoutId);
-    finishRefresh();
-  }
-}
-
-function finishRefresh() {
-  refreshInProgress = false;
-  $("refreshState").textContent = "No";
-  $("refreshButton").disabled = false;
-}
-
-function evaluateSafety(input) {
-  const reasons = [];
-
-  if (input.freshData !== true) reasons.push("stale market data");
-  if (input.criticalInputsComplete !== true) {
-    reasons.push("critical inputs incomplete");
-  }
-  if (input.engineHealthy !== true) reasons.push("safety engine failure");
-  if (input.connectionHealthy !== true) {
-    reasons.push("internet connection lost");
-  }
-  if (input.lossLimitReached === true) {
-    reasons.push("daily loss limit reached");
-  }
-  if (input.setupReassessed !== true) {
-    reasons.push("setup not reassessed after news");
-  }
-  if (input.macroConflict === true) {
-    reasons.push("conflicting macro signals");
-  }
-
-  return { approved: reasons.length === 0, reasons };
-}
-
-function runLocalTests() {
-  const tests = [
-    {
-      name: "Stale market data",
-      input: {
-        freshData: false,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: false
-      },
-      expected: "stale market data"
-    },
-    {
-      name: "Gold reverses after major news",
-      input: {
-        freshData: true,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: false,
-        macroConflict: false
-      },
-      expected: "setup not reassessed after news"
-    },
-    {
-      name: "Daily loss limit reached",
-      input: {
-        freshData: true,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: true,
-        setupReassessed: true,
-        macroConflict: false
-      },
-      expected: "daily loss limit reached"
-    },
-    {
-      name: "Internet connection disappears",
-      input: {
-        freshData: false,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: false,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: false
-      },
-      expected: "internet connection lost"
-    },
-    {
-      name: "Macro signals disagree",
-      input: {
-        freshData: true,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: true
-      },
-      expected: "conflicting macro signals"
-    },
-    {
-      name: "Safety engine fails",
-      input: {
-        freshData: true,
-        criticalInputsComplete: true,
-        engineHealthy: false,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: false
-      },
-      expected: "safety engine failure"
-    },
-    {
-      name: "Critical inputs missing",
-      input: {
-        freshData: true,
-        criticalInputsComplete: false,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: false
-      },
-      expected: "critical inputs incomplete"
-    },
-    {
-      name: "Conflicting signals and stale quote",
-      input: {
-        freshData: false,
-        criticalInputsComplete: true,
-        engineHealthy: true,
-        connectionHealthy: true,
-        lossLimitReached: false,
-        setupReassessed: true,
-        macroConflict: true
-      },
-      expected: "stale market data"
+    function setVerification(label) {
+      $("verificationStatus").textContent = label;
     }
-  ];
 
-  const results = tests.map(test => {
-    const result = evaluateSafety(test.input);
-    const passed =
-      result.approved === false &&
-      result.reasons.includes(test.expected);
+    function setNoGo(reason) {
+      $("tradeStatus").textContent = "NO-GO";
+      $("tradeStatus").style.color = "var(--red)";
+      $("safetyReason").textContent = reason;
+    }
 
-    return { name: test.name, passed, reasons: result.reasons };
-  });
+    function updateNetworkStatus() {
+      const online = navigator.onLine;
+      $("networkStatus").textContent = online ? "Browser online" : "OFFLINE";
+      $("networkStatus").style.color = online ? "var(--green)" : "var(--red)";
 
-  const passedCount = results.filter(r => r.passed).length;
-  $("testSummary").textContent =
-    passedCount + " of " + results.length +
-    " local logic tests passed. Simulations only; live integrations not tested.";
+      if (!online) {
+        setFeedStatus("OFFLINE · DATA NOT LIVE", "bad");
+        setVerification("UNAVAILABLE");
+        setNoGo("Internet connection is unavailable. Monitoring is impaired; do not treat the last quote as live.");
+      }
+    }
 
-  $("testResults").replaceChildren();
+    /*
+      Validate the price, provider stale flags, provider state and timestamp.
+      nowMs is injectable so tests can use a fixed clock.
+    */
+    function validateQuote(data, nowMs = Date.now()) {
+      if (!data || typeof data !== "object") {
+        return { ok: false, reason: "The feed returned no usable object." };
+      }
 
-  results.forEach(result => {
-    const row = document.createElement("div");
-    row.className = "test";
+      const price = Number(data.spot_usd_oz ?? data.xau?.price);
 
-    const title = document.createElement("div");
-    title.textContent = result.name;
+      if (!Number.isFinite(price) || price <= 0) {
+        return { ok: false, reason: "Invalid or missing gold price." };
+      }
 
-    const status = document.createElement("div");
-    status.className = "test-result " + (result.passed ? "good" : "bad");
-    status.textContent = result.passed ? "PASS" : "FAIL";
+      if (data.stale === true || data.is_stale === true ||
+          data.fx_stale === true) {
+        return { ok: false, reason: "The provider marks data as stale." };
+      }
 
-    const detail = document.createElement("div");
-    detail.className = "small";
-    detail.textContent = result.reasons.length
-      ? "Blocked because: " + result.reasons.join("; ")
-      : "No safety block was triggered.";
+      const state = data.data_state;
+      if (state && typeof state === "object") {
+        const providerState = String(state.status || "").toLowerCase();
+        if (["stale", "unavailable", "error", "delayed"].includes(providerState)) {
+          return {
+            ok: false,
+            reason: "Provider data state is " + providerState + "."
+          };
+        }
+      }
 
-    row.append(title, status, detail);
-    $("testResults").appendChild(row);
-  });
-}
+      const rawTime =
+        data.price_as_of ||
+        data.updated_at ||
+        data.computed_at ||
+        state?.as_of;
 
-function resetLocalTests() {
-  $("testSummary").textContent = "Tests have not been run.";
-  $("testResults").replaceChildren();
-}
+      const timestamp = typeof rawTime === "number"
+        ? (rawTime < 100000000000 ? rawTime * 1000 : rawTime)
+        : Date.parse(rawTime);
 
-function updateNetworkStatus() {
-  if (navigator.onLine) {
-    $("networkState").textContent = "Browser reports online";
-    $("networkState").className = "warn";
-    $("connectionState").textContent =
-      "Network available; feed still requires verification.";
-    // Re-check on reconnection, but do not bypass request overlap protection.
+      if (!Number.isFinite(timestamp)) {
+        return { ok: false, reason: "The feed has no valid price timestamp." };
+      }
+
+      const ageSeconds = (nowMs - timestamp) / 1000;
+
+      if (ageSeconds < -CONFIG.maxFutureSeconds) {
+        return { ok: false, reason: "The price timestamp is too far in the future." };
+      }
+
+      if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
+        return {
+          ok: false,
+          reason: "Quote is too old: " + Math.floor(ageSeconds) + " seconds."
+        };
+      }
+
+      if (ageSeconds < 0) {
+        return { ok: false, reason: "The quote timestamp is slightly in the future; verification withheld." };
+      }
+
+      return {
+        ok: true,
+        price,
+        timestamp,
+        ageSeconds,
+        provider: data.source || "Unspecified provider",
+        priceSource: data.price_source || "Unspecified price source",
+        providerState: state?.status || "not supplied"
+      };
+    }
+
+    function showUnavailable(message) {
+      setFeedStatus("UNAVAILABLE · NOT LIVE", "bad");
+      setVerification("UNVERIFIED");
+      $("priceNote").textContent = message;
+      setNoGo("Gold feed is unavailable or unverified. Trading status remains NO-GO.");
+
+      if (lastAcceptedQuote) {
+        $("sourceTime").textContent =
+          "Last accepted quote: " + formatTime(lastAcceptedQuote.timestamp);
+        $("quoteAge").textContent =
+          "Last accepted quote is historical, not confirmed live.";
+      } else {
+        $("sourceTime").textContent = "Last accepted update: none";
+        $("quoteAge").textContent = "Quote age: unknown";
+      }
+    }
+
+    async function refreshGoldFeed() {
+      if (refreshInProgress) return;
+
+      if (!navigator.onLine) {
+        updateNetworkStatus();
+        showUnavailable("Offline. No fresh quote can be confirmed.");
+        return;
+      }
+
+      refreshInProgress = true;
+      $("refreshButton").disabled = true;
+      lastAttemptAt = Date.now();
+      $("attemptTime").textContent = formatTime(lastAttemptAt);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeoutMs);
+
+      try {
+        const separator = CONFIG.feedUrl.includes("?") ? "&" : "?";
+        const requestUrl =
+          CONFIG.feedUrl + separator + "fresh=" + Date.now();
+
+        const response = await fetch(requestUrl, {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal,
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!response.ok) {
+          throw new Error("Feed returned HTTP " + response.status + ".");
+        }
+
+        const data = await response.json();
+        const result = validateQuote(data);
+
+        if (!result.ok) {
+          showUnavailable(result.reason);
+          setFeedStatus("STALE / UNVERIFIED", "bad");
+          return;
+        }
+
+        /*
+          Do not update the accepted quote when validation fails.
+          The existing quote remains visibly historical if a later request fails.
+        */
+        lastAcceptedQuote = result;
+
+        $("goldPrice").innerHTML =
+          result.price.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }) + ' <span class="currency">USD/oz</span>';
+
+        setFeedStatus("FRESH · PROVIDER TIMESTAMP", "good");
+        setVerification("BASIC CHECKS PASSED");
+        $("priceNote").textContent =
+          "Provider-reported quote passed basic price and timestamp checks.";
+        $("sourceTime").textContent =
+          "Price timestamp: " + formatTime(result.timestamp);
+        $("quoteAge").textContent =
+          "Quote age at validation: " + Math.floor(result.ageSeconds) + " seconds.";
+        $("networkStatus").textContent = "Browser online";
+        $("networkStatus").style.color = "var(--green)";
+
+        setNoGo(
+          "Quote freshness checks passed, but broker matching, macro inputs, strategy rules and account-risk controls are not verified."
+        );
+      } catch (error) {
+        const message = error?.name === "AbortError"
+          ? "Feed request timed out after " + (CONFIG.timeoutMs / 1000) + " seconds."
+          : "Could not retrieve the gold feed: " + (error?.message || "unknown error");
+
+        showUnavailable(message);
+      } finally {
+        clearTimeout(timeoutId);
+        refreshInProgress = false;
+        $("refreshButton").disabled = false;
+      }
+    }
+
+    /*
+      Conservative permission rule.
+      All conditions must be true to return GO. The production dashboard
+      deliberately does not provide verified broker, strategy or macro flags.
+    */
+    function evaluateSafety(input) {
+      const checks = [
+        ["Quote is fresh", input.quoteFresh === true],
+        ["Internet is available", input.online === true],
+        ["Macro signals agree", input.macroAligned === true],
+        ["No unresolved news reversal", input.newsReversal !== true],
+        ["Daily loss limit not reached", input.dailyLossReached !== true],
+        ["Broker price independently verified", input.brokerVerified === true],
+        ["Account risk controls verified", input.accountRiskVerified === true],
+        ["Strategy confirmation verified", input.strategyConfirmed === true]
+      ];
+
+      const failed = checks.filter((item) => !item[1]).map((item) => item[0]);
+
+      return {
+        go: failed.length === 0,
+        failed
+      };
+    }
+
+    function checkLossLimit(limitValue, lossValue) {
+      const limit = Number(limitValue);
+      const loss = Number(lossValue);
+
+      if (!Number.isFinite(limit) || limit <= 0 ||
+          !Number.isFinite(loss) || loss < 0) {
+        return {
+          valid: false,
+          reached: true,
+          message: "INVALID INPUT — treat as blocked until corrected."
+        };
+      }
+
+      if (loss >= limit) {
+        return {
+          valid: true,
+          reached: true,
+          message: "LIMIT REACHED — local simulation blocks permission."
+        };
+      }
+
+      return {
+        valid: true,
+        reached: false,
+        message: "Limit not reached in this simulation. This does not authorize a trade."
+      };
+    }
+
+    $("checkLossButton").addEventListener("click", () => {
+      const result = checkLossLimit(
+        $("lossLimit").value,
+        $("lossUsed").value
+      );
+
+      $("lossResult").textContent = result.message;
+      $("lossResult").style.color = result.reached
+        ? "var(--red)"
+        : "var(--orange)";
+
+      $("lossStatus").textContent = result.valid
+        ? (result.reached ? "LIMIT REACHED" : "SIMULATION ONLY")
+        : "INVALID / BLOCKED";
+
+      setNoGo(result.message + " Real MT5 orders are not controlled by this page.");
+    });
+
+    function runLocalTests() {
+      const fixedNow = Date.parse("2026-10-17T12:00:00Z");
+      const freshQuote = {
+        spot_usd_oz: 4166.10,
+        price_as_of: "2026-10-17T11:59:30Z",
+        updated_at: "2026-10-17T11:59:30Z",
+        stale: false,
+        data_state: { status: "fresh", as_of: "2026-10-17T11:59:30Z" }
+      };
+
+      const tests = [
+        {
+          name: "Fresh quote passes basic validation",
+          run: () => validateQuote(freshQuote, fixedNow).ok === true
+        },
+        {
+          name: "Old quote is rejected",
+          run: () => validateQuote({
+            ...freshQuote,
+            price_as_of: "2026-10-17T11:55:00Z"
+          }, fixedNow).ok === false
+        },
+        {
+          name: "Provider stale flag is rejected",
+          run: () => validateQuote({
+            ...freshQuote,
+            stale: true
+          }, fixedNow).ok === false
+        },
+        {
+          name: "Missing or invalid price is rejected",
+          run: () => validateQuote({
+            ...freshQuote,
+            spot_usd_oz: -1
+          }, fixedNow).ok === false
+        },
+        {
+          name: "News reversal prevents GO",
+          run: () => evaluateSafety({
+            quoteFresh: true,
+            online: true,
+            macroAligned: true,
+            newsReversal: true,
+            dailyLossReached: false,
+            brokerVerified: true,
+            accountRiskVerified: true,
+            strategyConfirmed: true
+          }).go === false
+        },
+        {
+          name: "Daily loss limit blocks permission",
+          run: () => {
+            const loss = checkLossLimit(200, 200);
+            const safety = evaluateSafety({
+              quoteFresh: true,
+              online: true,
+              macroAligned: true,
+              newsReversal: false,
+              dailyLossReached: loss.reached,
+              brokerVerified: true,
+              accountRiskVerified: true,
+              strategyConfirmed: true
+            });
+            return loss.reached === true && safety.go === false;
+          }
+        },
+        {
+          name: "Internet loss prevents GO",
+          run: () => evaluateSafety({
+            quoteFresh: true,
+            online: false,
+            macroAligned: true,
+            newsReversal: false,
+            dailyLossReached: false,
+            brokerVerified: true,
+            accountRiskVerified: true,
+            strategyConfirmed: true
+          }).go === false
+        },
+        {
+          name: "Conflicting macro signals prevent GO",
+          run: () => evaluateSafety({
+            quoteFresh: true,
+            online: true,
+            macroAligned: false,
+            newsReversal: false,
+            dailyLossReached: false,
+            brokerVerified: true,
+            accountRiskVerified: true,
+            strategyConfirmed: true
+          }).go === false
+        }
+      ];
+
+      const results = [];
+      let passed = 0;
+
+      for (const test of tests) {
+        let success = false;
+        let detail = "";
+
+        try {
+          success = test.run() === true;
+          detail = success
+            ? "Expected safety behaviour observed."
+            : "Unexpected result.";
+        } catch (error) {
+          detail = "Test error: " + (error?.message || "unknown");
+        }
+
+        if (success) passed++;
+
+        results.push({
+          name: test.name,
+          success,
+          detail
+        });
+      }
+
+      $("testResults").replaceChildren();
+
+      for (const result of results) {
+        const item = document.createElement("div");
+        item.className = "test-item " +
+          (result.success ? "test-pass" : "test-fail");
+
+        const title = document.createElement("strong");
+        title.textContent =
+          (result.success ? "PASS · " : "FAIL · ") + result.name;
+
+        const detail = document.createElement("div");
+        detail.className = "muted";
+        detail.textContent = result.detail;
+
+        item.append(title, detail);
+        $("testResults").appendChild(item);
+      }
+
+      const summary = $("testSummary");
+      summary.textContent = passed + " / " + tests.length + " LOCAL TESTS PASSED";
+      summary.className = "status " +
+        (passed === tests.length ? "good" : "bad");
+
+      /*
+        Even if all simulated tests pass, they do not verify live services,
+        real internet failure, broker integration or account controls.
+      */
+      setNoGo(
+        passed + " of " + tests.length +
+        " local simulated tests passed. Live integration and real account controls remain unverified; trading status stays NO-GO."
+      );
+    }
+
+    $("refreshButton").addEventListener("click", refreshGoldFeed);
+    $("testButton").addEventListener("click", runLocalTests);
+
+    window.addEventListener("online", () => {
+      updateNetworkStatus();
+      refreshGoldFeed();
+    });
+
+    window.addEventListener("offline", () => {
+      updateNetworkStatus();
+      showUnavailable("Internet connection lost. Monitoring is impaired.");
+    });
+
+    updateNetworkStatus();
     refreshGoldFeed();
-  } else {
-    $("networkState").textContent = "OFFLINE";
-    $("networkState").className = "bad";
-    showUnavailable("Internet connection lost. Monitoring is impaired.");
-    $("connectionState").textContent =
-      "OFFLINE — monitoring is impaired.";
-  }
-}
 
-$("refreshButton").addEventListener("click", refreshGoldFeed);
-$("runTestsButton").addEventListener("click", runLocalTests);
-$("resetTestsButton").addEventListener("click", resetLocalTests);
-
-window.addEventListener("offline", updateNetworkStatus);
-window.addEventListener("online", updateNetworkStatus);
-
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && navigator.onLine) {
-    refreshGoldFeed();
-  }
-});
-
-// Repeated refreshes are guarded against overlapping requests.
-refreshGoldFeed();
-refreshTimer = setInterval(
-  refreshGoldFeed,
-  CONFIG.refreshIntervalMs
-);
-</script>
+    refreshTimer = setInterval(() => {
+      if (navigator.onLine) refreshGoldFeed();
+      else updateNetworkStatus();
+    }, CONFIG.refreshMs);
+  </script>
 </body>
 </html>
-
-
-  
