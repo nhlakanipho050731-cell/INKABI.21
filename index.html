@@ -348,6 +348,68 @@ document.getElementById("reset").addEventListener("click", function () {
 });
 
 document.getElementById("decision").textContent = "NO-GO";
+
+async function refreshGoldFeed() {
+  const badge = document.getElementById("feedBadge");
+  const price = document.getElementById("price");
+  const timestamp = document.getElementById("timestamp");
+  const connection = document.getElementById("connection");
+  const decision = document.getElementById("decision");
+
+  badge.textContent = "CHECKING";
+  badge.className = "status warn";
+  connection.textContent = "Checking source...";
+  decision.textContent = "NO-GO";
+
+  try {
+    const response = await fetch(
+      "https://xaus.com/api/v1/spot",
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+      throw new Error("Source returned HTTP " + response.status);
+    }
+
+    const data = await response.json();
+    const quote = Number(data.spot_usd_oz);
+    const updated = Date.parse(data.price_as_of || data.updated_at);
+    const ageSeconds = (Date.now() - updated) / 1000;
+
+    if (
+      !Number.isFinite(quote) || quote <= 0 ||
+      !Number.isFinite(updated) ||
+      ageSeconds < -60 || ageSeconds > 120 ||
+      data.stale === true ||
+      !data.data_state ||
+      data.data_state.status !== "fresh"
+    ) {
+      throw new Error("Price invalid or freshness not verified");
+    }
+
+    price.textContent = "$" + quote.toLocaleString(
+      "en-US",
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    );
+
+    timestamp.textContent = new Date(updated).toLocaleString();
+    connection.textContent = "Source responded; quote age " +
+      Math.max(0, Math.round(ageSeconds)) + " seconds";
+    badge.textContent = "SOURCE REPORTS FRESH";
+    badge.className = "status warn";
+  } catch (error) {
+    price.textContent = "—";
+    timestamp.textContent = "No verified quote";
+    connection.textContent = "Feed unavailable or freshness unverified";
+    badge.textContent = "UNAVAILABLE";
+    badge.className = "status warn";
+  }
+
+  decision.textContent = "NO-GO";
+}
+
+refreshGoldFeed();
+  
 </script>
 </body>
 </html>
