@@ -290,9 +290,56 @@ function showUnavailable(message) {
   }
 }
 
+
 function validateQuote(data, nowMs = Date.now()) {
   if (!data || typeof data !== "object") {
     return { ok: false, reason: "Invalid response format." };
+  }
+
+  const price = Number(data.spot_usd_oz);
+  const priceTime = Date.parse(data.price_as_of || "");
+  const responseTime = Date.parse(data.updated_at || "");
+  const stateTime = Date.parse(data.data_state?.as_of || "");
+
+  if (!Number.isFinite(price) || price <= 0) {
+    return { ok: false, reason: "Invalid gold price." };
+  }
+
+  if (
+    data.stale === true ||
+    data.data_state?.status !== "fresh"
+  ) {
+    return { ok: false, reason: "Provider data is not fresh." };
+  }
+
+  for (const [label, timestamp] of [
+    ["price_as_of", priceTime],
+    ["updated_at", responseTime],
+    ["data_state.as_of", stateTime]
+  ]) {
+    if (!Number.isFinite(timestamp)) {
+      return { ok: false, reason: "Missing or invalid " + label };
+    }
+
+    const ageSeconds = (nowMs - timestamp) / 1000;
+
+    if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
+      return { ok: false, reason: label + " is stale." };
+    }
+
+    if (ageSeconds < -CONFIG.maxFutureSeconds) {
+      return { ok: false, reason: label + " is in the future." };
+    }
+  }
+
+  return {
+    ok: true,
+    price,
+    timestamp: priceTime,
+    ageSeconds: Math.max(0, (nowMs - priceTime) / 1000)
+  };
+}
+ };
   }
 
   const price = Number(data.spot_usd_oz);
@@ -371,7 +418,9 @@ async function refreshGoldFeed() {
   }, CONFIG.requestTimeoutMs);
 
   try {
-    const response = await fetch(CONFIG.feedUrl, {
+    const response = await fetch(
+  CONFIG.feedUrl + "?fresh=" + Date.now(),
+  {
       method: "GET",
       cache: "no-store",
       signal: controller.signal,
