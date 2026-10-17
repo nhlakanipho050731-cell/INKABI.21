@@ -1,1019 +1,168 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b0d10">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101820">
 <title>INKABI.21 | Gold Intelligence</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#090b0e; --panel:#12161b; --panel2:#181e24;
-  --line:#2b333b; --gold:#d9ad54; --text:#f1f3f5;
-  --muted:#9aa5b1; --red:#ff6868; --green:#66d7a1;
-  --blue:#83baff;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-header {
-  padding:20px 16px 16px; border-bottom:1px solid var(--line);
-  background:#0d1014; position:sticky; top:0; z-index:5;
-}
-.brand { color:var(--gold); font-size:22px; font-weight:900; letter-spacing:2px; }
-.sub { color:var(--muted); font-size:11px; letter-spacing:1.5px; }
-main { max-width:760px; margin:auto; padding:14px 12px 100px; }
-nav {
-  display:flex; gap:7px; overflow-x:auto; padding:12px 0 4px;
-}
-nav button { flex:0 0 auto; width:auto; padding:9px 12px; }
-button, input, select, textarea {
-  font:inherit; border-radius:10px; border:1px solid var(--line);
-  background:var(--panel2); color:var(--text); padding:11px;
-}
-button { cursor:pointer; font-weight:700; }
-button.primary { background:var(--gold); color:#111; border-color:var(--gold); }
-button.danger { border-color:#713e43; color:#ffaaaa; }
-button:disabled { opacity:.5; cursor:not-allowed; }
-button.active { border-color:var(--gold); color:var(--gold); }
-button:focus-visible,input:focus-visible,select:focus-visible {
-  outline:2px solid var(--gold); outline-offset:2px;
-}
-.card {
-  background:var(--panel); border:1px solid var(--line);
-  border-radius:15px; padding:15px; margin:12px 0;
-}
-h1,h2,h3,p { margin-top:0; }
-h2 { font-size:17px; margin-bottom:12px; }
-h3 { font-size:14px; }
-.muted { color:var(--muted); }
-.small { font-size:12px; }
-.gold { color:var(--gold); }
-.big-price { font-size:clamp(29px,8vw,43px); font-weight:850; letter-spacing:-1px; }
-.status {
-  border:1px solid var(--line); border-radius:12px;
-  padding:14px; margin:10px 0; background:#111519;
-}
-.status strong { font-size:21px; display:block; }
-.no-go { color:var(--red); }
-.go { color:var(--green); }
-.wait { color:var(--gold); }
-.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-.stat { padding:11px; background:var(--panel2); border-radius:10px; min-width:0; }
-.stat .value { font-size:15px; font-weight:750; overflow-wrap:anywhere; }
-label { display:block; margin:11px 0 5px; color:#cbd2da; font-size:13px; }
-input,select,textarea { width:100%; }
-input[type="checkbox"] { width:auto; accent-color:var(--gold); }
-.check { display:flex; align-items:flex-start; gap:9px; margin:12px 0; }
-.check label { margin:0; flex:1; }
-.actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-.actions button { flex:1 1 135px; }
-hr { border:0; border-top:1px solid var(--line); margin:15px 0; }
-.hidden { display:none !important; }
-.notice { padding:11px; border-radius:9px; background:#1a2027; color:#c7d0d8; font-size:12px; }
-.warning { border-left:3px solid var(--gold); padding-left:10px; }
-.result { padding:10px; border-radius:9px; margin:8px 0; background:var(--panel2); }
-.pass { color:var(--green); }
-.fail { color:var(--red); }
-.trade { border:1px solid var(--line); padding:12px; border-radius:10px; margin:9px 0; }
-footer { text-align:center; padding:15px; color:var(--muted); font-size:11px; }
-@media(max-width:390px) {
-  .grid { grid-template-columns:1fr 1fr; gap:7px; }
-  .card { padding:12px; }
-}
+:root{color-scheme:dark;--bg:#0b1117;--panel:#141e27;--line:#293743;--text:#eef3f6;--muted:#9eacb8;--gold:#e5bd62;--green:#67d6a0;--red:#ff8585;--yellow:#ffd477}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+header{background:#101820;padding:20px 15px;border-bottom:1px solid var(--line)}
+h1{margin:0;color:var(--gold);letter-spacing:2px}
+nav,.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+main{max-width:800px;margin:auto;padding:15px}
+section{display:none}
+section.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:14px}
+.muted{color:var(--muted);font-size:12px}
+.price{font-size:clamp(32px,9vw,46px);font-weight:800;color:var(--gold)}
+.status{font-weight:750;margin:10px 0}
+.good{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--yellow)}
+button,input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:8px;padding:11px;background:#0e161d;color:var(--text);max-width:100%}
+button{cursor:pointer}button.primary{background:var(--gold);color:#17130a;font-weight:800;border:0}
+input,select,textarea{width:100%}textarea{min-height:85px}
+label{display:block;margin:12px 0 5px;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:center}
+.check input{width:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px}
+.metric{background:#0e161d;padding:10px;border-radius:8px;overflow-wrap:anywhere}
+.metric strong{display:block}
+.test-row{padding:10px 0;border-bottom:1px solid var(--line)}
+footer{padding:20px 0;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">INKABI.21</div>
-  <div class="sub">GOLD MARKET INTELLIGENCE · SAFETY FIRST</div>
-  <nav aria-label="Main navigation">
-    <button class="active" data-tab="home">Home</button>
-    <button data-tab="macro">Macro</button>
-    <button data-tab="plan">Trade plan</button>
-    <button data-tab="journal">Journal</button>
-    <button data-tab="risk">Risk & tests</button>
-  </nav>
+<h1>INKABI.21</h1>
+<div class="muted">GOLD MARKET INTELLIGENCE · SAFETY FIRST</div>
+<nav>
+<button data-tab="home">Dashboard</button>
+<button data-tab="macro">Macro</button>
+<button data-tab="plan">Trade Plan</button>
+<button data-tab="journal">Journal</button>
+<button data-tab="risk">Risk & Tests</button>
+</nav>
 </header>
 
 <main>
-<section id="home" class="page">
-  <div class="card">
-    <div class="muted small">XAU/USD · GOLD SPOT</div>
-    <div id="price" class="big-price">—</div>
-    <div id="quoteStatus" class="muted">PRICE NOT VERIFIED</div>
-    <div class="grid" style="margin-top:14px">
-      <div class="stat"><div class="muted small">Provider timestamp</div><div id="providerTime" class="value">Not available</div></div>
-      <div class="stat"><div class="muted small">Quote age</div><div id="quoteAge" class="value">Unknown</div></div>
-      <div class="stat"><div class="muted small">Connection</div><div id="connection" class="value">Checking…</div></div>
-      <div class="stat"><div class="muted small">Last attempt</div><div id="lastAttempt" class="value">Not started</div></div>
-    </div>
-    <div class="actions">
-      <button id="refreshBtn" class="primary">Refresh gold feed</button>
-      <button id="testBtn">Run local tests</button>
-    </div>
-    <p class="muted small" style="margin:10px 0 0">Automatic refresh every 60 seconds while this page is open. A failed refresh never counts as a fresh quote.</p>
-  </div>
-
-  <div class="card">
-    <h2>Decision engine</h2>
-    <div id="decisionBox" class="status">
-      <strong id="decision">NO-GO</strong>
-      <span id="decisionReason">Waiting for verified evidence.</span>
-    </div>
-    <div class="grid">
-      <div class="stat"><div class="muted small">Macro status</div><div id="homeMacro" class="value">Unconfirmed</div></div>
-      <div class="stat"><div class="muted small">Risk status</div><div id="homeRisk" class="value">Not verified</div></div>
-    </div>
-    <p class="notice" style="margin-top:12px">GO means only that the configured checklist passed. It does not predict price direction or guarantee a profitable trade.</p>
-  </div>
-
-  <div class="card">
-    <h2>System health</h2>
-    <div id="healthMessages" class="muted">Waiting for initial checks.</div>
-  </div>
+<section id="home" class="active">
+<div class="card">
+<div class="muted">XAU/USD · PROVIDER QUOTE</div>
+<div class="price" id="goldPrice">—</div>
+<div id="quoteStatus" class="status warn">NOT VERIFIED</div>
+<div class="grid">
+<div class="metric">Provider timestamp<strong id="providerTime">—</strong></div>
+<div class="metric">Quote age<strong id="quoteAge">—</strong></div>
+<div class="metric">Connection<strong id="connection">Checking</strong></div>
+<div class="metric">Last attempt<strong id="lastAttempt">—</strong></div>
+</div>
+<p id="feedMessage" class="muted">Waiting for provider response.</p>
+<div class="actions">
+<button class="primary" id="refreshBtn">Refresh Gold</button>
+<button id="testBtn">Run Local Tests</button>
+</div>
+</div>
+<div class="card">
+<h3>Trading decision</h3>
+<div id="decisionBox" class="status bad">NO-GO · VERIFY DATA FIRST</div>
+<p id="healthMessages" class="muted">Price alone is not a trading signal.</p>
+</div>
 </section>
 
-<section id="macro" class="page hidden">
-  <div class="card">
-    <h2>Macro evidence</h2>
-    <p class="muted small">INKABI.21 does not automatically verify macro news in this version. Enter only information you have checked against reliable sources.</p>
-    <label for="dxy">DXY direction</label>
-    <select id="dxy">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="yields">US Treasury yields</label>
-    <select id="yields">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="realYields">US real yields</label>
-    <select id="realYields">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="macroBias">Overall evidence bias for gold</label>
-    <select id="macroBias">
-      <option value="unknown">Not verified</option>
-      <option value="bullish">Bullish</option>
-      <option value="bearish">Bearish</option>
-      <option value="conflict">Conflicting / unclear</option>
-    </select>
-    <label for="macroSource">Source checked (e.g. official release)</label>
-    <input id="macroSource" maxlength="180" placeholder="Source name and release">
-    <label for="macroTime">Source publication time / notes</label>
-    <input id="macroTime" maxlength="180" placeholder="Time and key detail">
-    <div class="check">
-      <input id="macroVerified" type="checkbox">
-      <label for="macroVerified">I checked the source and timestamp myself.</label>
-    </div>
-    <div class="actions"><button id="saveMacro" class="primary">Save macro assessment</button><button id="clearMacro">Clear assessment</button></div>
-    <div id="macroMessage" class="notice">Macro is unconfirmed until saved and verified.</div>
-  </div>
-  <div class="card">
-    <h2>How to interpret the evidence</h2>
-    <p>Falling US real yields and a weaker dollar can support gold; rising real yields and a stronger dollar can pressure it. These are tendencies, not rules.</p>
-    <p class="muted small">Risk events, central-bank guidance, positioning and price action can override simple correlations. Conflicting signals should result in NO-GO.</p>
-  </div>
+<section id="macro">
+<div class="card">
+<h2>Macro Monitor</h2>
+<p class="muted">Manual inputs only. These are not live macro feeds.</p>
+<label for="dxy">DXY direction</label>
+<select id="dxy"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="flat">Mixed</option></select>
+<label for="yields">US 10-year yield</label>
+<select id="yields"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="flat">Mixed</option></select>
+<label for="realYields">US 10-year real yield</label>
+<select id="realYields"><option value="unknown">Unknown</option><option value="up">Rising</option><option value="down">Falling</option><option value="flat">Mixed</option></select>
+<label for="macroBias">Gold assessment</label>
+<select id="macroBias"><option value="unknown">Unconfirmed</option><option value="bullish">Potentially bullish</option><option value="bearish">Potentially bearish</option><option value="conflict">Conflicting</option></select>
+<label for="macroSource">Source, release time and evidence</label>
+<textarea id="macroSource" placeholder="Actual vs forecast, source, release time, market reaction"></textarea>
+<div class="actions">
+<button class="primary" id="saveMacro">Save Assessment</button>
+<button id="clearMacro">Clear</button>
+</div>
+<p id="macroMessage" class="muted">Not independently verified.</p>
+</div>
 </section>
 
-<section id="plan" class="page hidden">
-  <div class="card">
-    <h2>Trade readiness checklist</h2>
-    <p class="muted small">All four items must be confirmed for the checklist to allow GO. These are manual confirmations, not broker verification.</p>
-    <div class="check"><input id="newsClear" type="checkbox"><label for="newsClear">No unresolved major-news reversal or immediate event risk.</label></div>
-    <div class="check"><input id="strategyConfirmed" type="checkbox"><label for="strategyConfirmed">A defined setup and price-action confirmation exist.</label></div>
-    <div class="check"><input id="accountRiskVerified" type="checkbox"><label for="accountRiskVerified">I verified account risk, stop distance and position size.</label></div>
-    <div class="check"><input id="brokerVerified" type="checkbox"><label for="brokerVerified">I verified the broker/platform and current account conditions.</label></div>
-    <label for="setupNotes">Setup notes</label>
-    <textarea id="setupNotes" rows="4" maxlength="1000" placeholder="Structure, entry trigger, invalidation, stop, target and event risk"></textarea>
-    <div class="actions"><button id="savePlan" class="primary">Save checklist</button><button id="resetPlan">Reset checklist</button></div>
-    <p class="notice">This app does not connect to MT5, read your account balance, validate your broker, or place/block broker orders. The checklist relies on your confirmations.</p>
-  </div>
+<section id="plan">
+<div class="card">
+<h2>Trade Readiness</h2>
+<p class="muted">Checklist support only. It does not place trades or block broker orders.</p>
+<label class="check"><input type="checkbox" id="newsClear"> News and event risk checked</label>
+<label class="check"><input type="checkbox" id="strategyConfirmed"> Entry trigger and invalidation identified</label>
+<label class="check"><input type="checkbox" id="accountRiskVerified"> Position size and stop checked</label>
+<label class="check"><input type="checkbox" id="brokerVerified"> Broker price and spread checked</label>
+<label for="setupNotes">Setup notes</label>
+<textarea id="setupNotes" placeholder="Entry, stop, target, invalidation and reasons to stay out"></textarea>
+<div class="actions">
+<button class="primary" id="savePlan">Save Plan</button>
+<button id="resetPlan">Reset Checklist</button>
+</div>
+<div id="planStatus" class="status warn">NO-GO · INCOMPLETE</div>
+</div>
 </section>
 
-<section id="journal" class="page hidden">
-  <div class="card">
-    <h2>Manual trade journal</h2>
-    <p class="muted small">Entries are saved in this browser on this device. Browser data can be lost; export a CSV backup regularly.</p>
-    <form id="journalForm">
-      <input id="tradeId" type="hidden">
-      <label for="tradeDate">Date and time</label>
-      <input id="tradeDate" type="datetime-local" required>
-      <label for="tradeSide">Direction</label>
-      <select id="tradeSide"><option>Buy</option><option>Sell</option><option>Demo / no trade</option></select>
-      <div class="grid">
-        <div><label for="tradeEntry">Entry price</label><input id="tradeEntry" type="number" step="any" placeholder="Optional"></div>
-        <div><label for="tradeExit">Exit price</label><input id="tradeExit" type="number" step="any" placeholder="Optional"></div>
-        <div><label for="tradeRisk">Risk (account currency)</label><input id="tradeRisk" type="number" min="0" step="any" placeholder="Optional"></div>
-        <div><label for="tradeResult">Result (account currency)</label><input id="tradeResult" type="number" step="any" placeholder="Optional"></div>
-      </div>
-      <label for="tradeReason">Setup, execution and lesson</label>
-      <textarea id="tradeReason" rows="3" maxlength="1500" placeholder="Why did you take it? Did you follow your rules?"></textarea>
-      <div class="actions"><button class="primary" type="submit">Save journal entry</button><button type="button" id="cancelEdit">Clear form</button></div>
-    </form>
-  </div>
-  <div class="card">
-    <h2>Journal records</h2>
-    <div id="journalSummary" class="muted small">No records yet.</div>
-    <div class="actions"><button id="exportCsv" class="primary">Export CSV backup</button><button id="deleteAllTrades" class="danger">Delete all entries</button></div>
-    <div id="journalList"></div>
-  </div>
+<section id="journal">
+<div class="card">
+<h2>Trade Journal</h2>
+<label for="journalSetup">Setup and context</label>
+<textarea id="journalSetup"></textarea>
+<label for="journalOutcome">Outcome and lesson</label>
+<textarea id="journalOutcome"></textarea>
+<div class="actions">
+<button class="primary" id="saveJournal">Save Entry</button>
+<button id="exportJournal">Export Journal</button>
+</div>
+<p id="journalMessage" class="muted">Entries are stored in this browser when storage is available.</p>
+<div id="journalEntries"></div>
+</div>
 </section>
 
-<section id="risk" class="page hidden">
-  <div class="card">
-    <h2>Daily loss guard</h2>
-    <p class="muted small">Simulation only. Enter values in the same account currency. This does not read your broker balance or block real orders.</p>
-    <label for="dailyLimit">Daily loss limit</label>
-    <input id="dailyLimit" type="number" min="0.01" step="any" value="100">
-    <label for="dailyLoss">Loss accumulated today (positive amount)</label>
-    <input id="dailyLoss" type="number" min="0" step="any" value="0">
-    <div class="actions"><button id="checkLoss" class="primary">Check loss guard</button><button id="resetLoss">Reset simulation</button></div>
-    <div id="lossResult" class="status">Loss limit has not been checked.</div>
-  </div>
-  <div class="card">
-    <h2>Failure-test laboratory</h2>
-    <p class="muted small">These are simulated local logic tests, not live-feed, network infrastructure, macro-provider or broker integration tests.</p>
-    <button id="runTestsAgain" class="primary">Run all local tests</button>
-    <div id="testSummary" class="muted" style="margin-top:12px">Tests have not been run in this page session.</div>
-    <div id="testResults"></div>
-  </div>
-  <div class="card">
-    <h2>Current limitations</h2>
-    <ul class="muted small">
-      <li>Gold data depends on an external endpoint and browser CORS/network access.</li>
-      <li>Macro data and news are manually entered; no verified live news feed is integrated.</li>
-      <li>Risk controls are not connected to your broker or MT5.</li>
-      <li>Journal records stay in this browser unless exported.</li>
-      <li>Local tests simulate failures; they do not prove every real-world failure is handled.</li>
-    </ul>
-  </div>
+<section id="risk">
+<div class="card">
+<h2>Daily Risk Control</h2>
+<p class="muted">Local warning only. This is not connected to your MT5 account.</p>
+<label for="dailyLimit">Daily loss limit</label>
+<input id="dailyLimit" type="number" min="0" step="0.01" placeholder="Enter your limit">
+<label for="dailyLoss">Loss recorded today</label>
+<input id="dailyLoss" type="number" min="0" step="0.01" placeholder="Enter today's loss">
+<div class="actions">
+<button class="primary" id="checkLoss">Check Risk</button>
+<button id="resetLoss">Clear Loss Input</button>
+</div>
+<div id="lossStatus" class="status warn">NO-GO · ENTER RISK VALUES</div>
+</div>
+<div class="card">
+<h2>Local Safety Tests</h2>
+<p class="muted">These are simulations, not live integration tests.</p>
+<button class="primary" id="runTestsAgain">Run All Local Tests</button>
+<div id="testSummary" class="status warn" aria-live="polite">Tests have not run.</div>
+<div id="testResults"></div>
+</div>
+<div class="card">
+<h3>System limitations</h3>
+<ul>
+<li>Gold feed depends on provider availability and browser access.</li>
+<li>Macro data must be entered and verified manually.</li>
+<li>Local tests do not prove real-world reliability.</li>
+<li>The daily loss warning cannot block MT5 orders.</li>
+</ul>
+</div>
 </section>
+
+<footer>INKABI.21 · Decision support only · Always verify prices and orders with your broker.</footer>
 </main>
-<footer>INKABI.21 · Evidence before execution · No automated trading</footer>
 
 <script>
 "use strict";
 
-/* Configuration: quote freshness threshold is 120 seconds. */
-const CONFIG = Object.freeze({
-  feedUrl: "https://xaus.com/api/v1/spot",
-  refreshMs: 60000,
-  timeoutMs: 10000,
-  maxQuoteAgeSeconds: 120,
-  maxFutureSeconds: 60,
-  journalKey: "inkabi21_journal_v1",
-  macroKey: "inkabi21_macro_v1",
-  planKey: "inkabi21_plan_v1"
-});
-
-const $ = id => document.getElementById(id);
-const state = {
-  quote: null,
-  quoteFresh: false,
-  fetching: false,
-  lastAttempt: null,
-  feedMessage: "Waiting for initial refresh.",
-  macro: null,
-  lastTests: null
-};
-
-function safeText(value) {
-  return String(value ?? "");
-}
-function setText(id, value) {
-  $(id).textContent = safeText(value);
-}
-function dateLabel(date) {
-  if (!date || !Number.isFinite(date.getTime())) return "Not available";
-  return date.toLocaleString();
-}
-function validPositiveNumber(value) {
-  const n = Number(value);
-  return value !== null && value !== "" && Number.isFinite(n) && n > 0;
-}
-function online() {
-  return navigator.onLine === true;
-}
-
-/* Accepts the provider response previously observed:
-   {price:"4182.83", is_stale:false, computed_at:"..."} */
-function validateQuote(data, nowMs = Date.now()) {
-  if (!data || typeof data !== "object") {
-    return { ok:false, reason:"Invalid or missing response." };
-  }
-
-  const rawPrice =
-    data.spot_usd_oz ??
-    data.price ??
-    data.xau?.price;
-
-  if (!validPositiveNumber(rawPrice)) {
-    return { ok:false, reason:"Price missing, invalid or not positive." };
-  }
-
-  const staleFlag =
-    data.is_stale === true ||
-    data.stale === true ||
-    data.fx_stale === true ||
-    data.data_state?.status === "stale";
-
-  if (staleFlag) {
-    return { ok:false, reason:"Provider marked this quote stale." };
-  }
-
-  const rawTimestamp =
-    data.price_as_of ??
-    data.provider_timestamp ??
-    data.computed_at ??
-    data.updated_at ??
-    data.timestamp ??
-    data.xau?.computed_at;
-
-  if (!rawTimestamp) {
-    return { ok:false, reason:"Provider timestamp is missing." };
-  }
-
-  let timestampMs;
-  if (typeof rawTimestamp === "number") {
-    timestampMs = rawTimestamp < 1e12 ? rawTimestamp * 1000 : rawTimestamp;
-  } else {
-    timestampMs = Date.parse(rawTimestamp);
-  }
-
-  if (!Number.isFinite(timestampMs)) {
-    return { ok:false, reason:"Provider timestamp is invalid." };
-  }
-
-  const ageSeconds = (nowMs - timestampMs) / 1000;
-
-  if (ageSeconds < -CONFIG.maxFutureSeconds) {
-    return { ok:false, reason:"Provider timestamp is too far in the future." };
-  }
-  if (ageSeconds < 0) {
-    return { ok:false, reason:"Provider timestamp is ahead of this device clock." };
-  }
-  if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
-    return { ok:false, reason:"Quote is stale: older than 120 seconds." };
-  }
-
-  return {
-    ok:true,
-    price:Number(rawPrice),
-    timestampMs,
-    ageSeconds,
-    currency:data.quote_currency || "USD",
-    unit:data.unit || "troy_ounce",
-    symbol:data.symbol || "XAU"
-  };
-}
-
-/* One shared decision gate is used by the UI and the test laboratory. */
-function evaluateSafety(input) {
-  const reasons = [];
-
-  if (!input.online) reasons.push("Internet connection unavailable.");
-  if (!input.quoteFresh) reasons.push("Gold quote is not verified fresh.");
-  if (!input.macroVerified) reasons.push("Macro evidence is not verified.");
-  if (input.macroBias === "conflict" || input.macroBias === "unknown") {
-    reasons.push("Macro signals are conflicting or unconfirmed.");
-  }
-  if (!input.newsClear) reasons.push("News reversal/event risk is unresolved.");
-  if (input.dailyLossReached) reasons.push("Daily loss limit reached.");
-  if (!input.brokerVerified) reasons.push("Broker conditions are not verified.");
-  if (!input.accountRiskVerified) reasons.push("Account risk is not verified.");
-  if (!input.strategyConfirmed) reasons.push("Setup lacks confirmation.");
-
-  return {
-    status: reasons.length === 0 ? "GO" : "NO-GO",
-    reasons
-  };
-}
-
-function getDailyLossState(limitValue, lossValue) {
-  const limit = Number(limitValue);
-  const loss = Number(lossValue);
-
-  if (!Number.isFinite(limit) || limit <= 0) {
-    return { valid:false, reached:true, message:"Enter a daily loss limit greater than zero." };
-  }
-  if (!Number.isFinite(loss) || loss < 0) {
-    return { valid:false, reached:true, message:"Loss must be zero or a positive amount." };
-  }
-  if (loss >= limit) {
-    return { valid:true, reached:true, message:"LIMIT REACHED — new entries should be stopped under your configured rules." };
-  }
-  return {
-    valid:true,
-    reached:false,
-    message:"Within the simulated limit. Remaining allowance: " +
-      (limit-loss).toLocaleString(undefined,{maximumFractionDigits:2})
-  };
-}
-
-function macroIsVerified() {
-  return !!(
-    state.macro &&
-    state.macro.verified === true &&
-    state.macro.source.trim() &&
-    state.macro.time.trim() &&
-    ["bullish","bearish"].includes(state.macro.bias)
-  );
-}
-
-function currentGate() {
-  const loss = getDailyLossState($("dailyLimit").value, $("dailyLoss").value);
-  return evaluateSafety({
-    online:online(),
-    quoteFresh:state.quoteFresh && !!state.quote,
-    macroVerified:macroIsVerified(),
-    macroBias:macroIsVerified() ? state.macro.bias : "unknown",
-    newsClear:$("newsClear").checked,
-    dailyLossReached:!loss.valid || loss.reached,
-    brokerVerified:$("brokerVerified").checked,
-    accountRiskVerified:$("accountRiskVerified").checked,
-    strategyConfirmed:$("strategyConfirmed").checked
-  });
-}
-
-function renderDecision() {
-  const gate = currentGate();
-  setText("decision", gate.status);
-  setText("decisionReason", gate.status === "GO"
-    ? "All configured checklist conditions passed. This is not a price prediction."
-    : gate.reasons.join(" "));
-  $("decision").className = gate.status === "GO" ? "go" : "no-go";
-  $("decisionBox").style.borderColor = gate.status === "GO" ? "#347a5d" : "#713e43";
-  setText("homeMacro", macroIsVerified() ? "Manually verified" : "Unconfirmed");
-  const loss = getDailyLossState($("dailyLimit").value, $("dailyLoss").value);
-  setText("homeRisk", loss.valid && !loss.reached ? "Within simulated limit" : "STOP / CHECK");
-  setText("connection", online() ? "ONLINE" : "OFFLINE");
-  $("connection").style.color = online() ? "var(--green)" : "var(--red)";
-  re
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b0d10">
-<title>INKABI.21 | Gold Intelligence</title>
-<style>
-:root {
-  color-scheme: dark;
-  --bg:#090b0e; --panel:#12161b; --panel2:#181e24;
-  --line:#2b333b; --gold:#d9ad54; --text:#f1f3f5;
-  --muted:#9aa5b1; --red:#ff6868; --green:#66d7a1;
-  --blue:#83baff;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-header {
-  padding:20px 16px 16px; border-bottom:1px solid var(--line);
-  background:#0d1014; position:sticky; top:0; z-index:5;
-}
-.brand { color:var(--gold); font-size:22px; font-weight:900; letter-spacing:2px; }
-.sub { color:var(--muted); font-size:11px; letter-spacing:1.5px; }
-main { max-width:760px; margin:auto; padding:14px 12px 100px; }
-nav {
-  display:flex; gap:7px; overflow-x:auto; padding:12px 0 4px;
-}
-nav button { flex:0 0 auto; width:auto; padding:9px 12px; }
-button, input, select, textarea {
-  font:inherit; border-radius:10px; border:1px solid var(--line);
-  background:var(--panel2); color:var(--text); padding:11px;
-}
-button { cursor:pointer; font-weight:700; }
-button.primary { background:var(--gold); color:#111; border-color:var(--gold); }
-button.danger { border-color:#713e43; color:#ffaaaa; }
-button:disabled { opacity:.5; cursor:not-allowed; }
-button.active { border-color:var(--gold); color:var(--gold); }
-button:focus-visible,input:focus-visible,select:focus-visible {
-  outline:2px solid var(--gold); outline-offset:2px;
-}
-.card {
-  background:var(--panel); border:1px solid var(--line);
-  border-radius:15px; padding:15px; margin:12px 0;
-}
-h1,h2,h3,p { margin-top:0; }
-h2 { font-size:17px; margin-bottom:12px; }
-h3 { font-size:14px; }
-.muted { color:var(--muted); }
-.small { font-size:12px; }
-.gold { color:var(--gold); }
-.big-price { font-size:clamp(29px,8vw,43px); font-weight:850; letter-spacing:-1px; }
-.status {
-  border:1px solid var(--line); border-radius:12px;
-  padding:14px; margin:10px 0; background:#111519;
-}
-.status strong { font-size:21px; display:block; }
-.no-go { color:var(--red); }
-.go { color:var(--green); }
-.wait { color:var(--gold); }
-.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-.stat { padding:11px; background:var(--panel2); border-radius:10px; min-width:0; }
-.stat .value { font-size:15px; font-weight:750; overflow-wrap:anywhere; }
-label { display:block; margin:11px 0 5px; color:#cbd2da; font-size:13px; }
-input,select,textarea { width:100%; }
-input[type="checkbox"] { width:auto; accent-color:var(--gold); }
-.check { display:flex; align-items:flex-start; gap:9px; margin:12px 0; }
-.check label { margin:0; flex:1; }
-.actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-.actions button { flex:1 1 135px; }
-hr { border:0; border-top:1px solid var(--line); margin:15px 0; }
-.hidden { display:none !important; }
-.notice { padding:11px; border-radius:9px; background:#1a2027; color:#c7d0d8; font-size:12px; }
-.warning { border-left:3px solid var(--gold); padding-left:10px; }
-.result { padding:10px; border-radius:9px; margin:8px 0; background:var(--panel2); }
-.pass { color:var(--green); }
-.fail { color:var(--red); }
-.trade { border:1px solid var(--line); padding:12px; border-radius:10px; margin:9px 0; }
-footer { text-align:center; padding:15px; color:var(--muted); font-size:11px; }
-@media(max-width:390px) {
-  .grid { grid-template-columns:1fr 1fr; gap:7px; }
-  .card { padding:12px; }
-}
-</style>
-</head>
-<body>
-<header>
-  <div class="brand">INKABI.21</div>
-  <div class="sub">GOLD MARKET INTELLIGENCE · SAFETY FIRST</div>
-  <nav aria-label="Main navigation">
-    <button class="active" data-tab="home">Home</button>
-    <button data-tab="macro">Macro</button>
-    <button data-tab="plan">Trade plan</button>
-    <button data-tab="journal">Journal</button>
-    <button data-tab="risk">Risk & tests</button>
-  </nav>
-</header>
-
-<main>
-<section id="home" class="page">
-  <div class="card">
-    <div class="muted small">XAU/USD · GOLD SPOT</div>
-    <div id="price" class="big-price">—</div>
-    <div id="quoteStatus" class="muted">PRICE NOT VERIFIED</div>
-    <div class="grid" style="margin-top:14px">
-      <div class="stat"><div class="muted small">Provider timestamp</div><div id="providerTime" class="value">Not available</div></div>
-      <div class="stat"><div class="muted small">Quote age</div><div id="quoteAge" class="value">Unknown</div></div>
-      <div class="stat"><div class="muted small">Connection</div><div id="connection" class="value">Checking…</div></div>
-      <div class="stat"><div class="muted small">Last attempt</div><div id="lastAttempt" class="value">Not started</div></div>
-    </div>
-    <div class="actions">
-      <button id="refreshBtn" class="primary">Refresh gold feed</button>
-      <button id="testBtn">Run local tests</button>
-    </div>
-    <p class="muted small" style="margin:10px 0 0">Automatic refresh every 60 seconds while this page is open. A failed refresh never counts as a fresh quote.</p>
-  </div>
-
-  <div class="card">
-    <h2>Decision engine</h2>
-    <div id="decisionBox" class="status">
-      <strong id="decision">NO-GO</strong>
-      <span id="decisionReason">Waiting for verified evidence.</span>
-    </div>
-    <div class="grid">
-      <div class="stat"><div class="muted small">Macro status</div><div id="homeMacro" class="value">Unconfirmed</div></div>
-      <div class="stat"><div class="muted small">Risk status</div><div id="homeRisk" class="value">Not verified</div></div>
-    </div>
-    <p class="notice" style="margin-top:12px">GO means only that the configured checklist passed. It does not predict price direction or guarantee a profitable trade.</p>
-  </div>
-
-  <div class="card">
-    <h2>System health</h2>
-    <div id="healthMessages" class="muted">Waiting for initial checks.</div>
-  </div>
-</section>
-
-<section id="macro" class="page hidden">
-  <div class="card">
-    <h2>Macro evidence</h2>
-    <p class="muted small">INKABI.21 does not automatically verify macro news in this version. Enter only information you have checked against reliable sources.</p>
-    <label for="dxy">DXY direction</label>
-    <select id="dxy">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="yields">US Treasury yields</label>
-    <select id="yields">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="realYields">US real yields</label>
-    <select id="realYields">
-      <option value="unknown">Not verified</option>
-      <option value="up">Rising</option>
-      <option value="down">Falling</option>
-      <option value="mixed">Mixed / sideways</option>
-    </select>
-    <label for="macroBias">Overall evidence bias for gold</label>
-    <select id="macroBias">
-      <option value="unknown">Not verified</option>
-      <option value="bullish">Bullish</option>
-      <option value="bearish">Bearish</option>
-      <option value="conflict">Conflicting / unclear</option>
-    </select>
-    <label for="macroSource">Source checked (e.g. official release)</label>
-    <input id="macroSource" maxlength="180" placeholder="Source name and release">
-    <label for="macroTime">Source publication time / notes</label>
-    <input id="macroTime" maxlength="180" placeholder="Time and key detail">
-    <div class="check">
-      <input id="macroVerified" type="checkbox">
-      <label for="macroVerified">I checked the source and timestamp myself.</label>
-    </div>
-    <div class="actions"><button id="saveMacro" class="primary">Save macro assessment</button><button id="clearMacro">Clear assessment</button></div>
-    <div id="macroMessage" class="notice">Macro is unconfirmed until saved and verified.</div>
-  </div>
-  <div class="card">
-    <h2>How to interpret the evidence</h2>
-    <p>Falling US real yields and a weaker dollar can support gold; rising real yields and a stronger dollar can pressure it. These are tendencies, not rules.</p>
-    <p class="muted small">Risk events, central-bank guidance, positioning and price action can override simple correlations. Conflicting signals should result in NO-GO.</p>
-  </div>
-</section>
-
-<section id="plan" class="page hidden">
-  <div class="card">
-    <h2>Trade readiness checklist</h2>
-    <p class="muted small">All four items must be confirmed for the checklist to allow GO. These are manual confirmations, not broker verification.</p>
-    <div class="check"><input id="newsClear" type="checkbox"><label for="newsClear">No unresolved major-news reversal or immediate event risk.</label></div>
-    <div class="check"><input id="strategyConfirmed" type="checkbox"><label for="strategyConfirmed">A defined setup and price-action confirmation exist.</label></div>
-    <div class="check"><input id="accountRiskVerified" type="checkbox"><label for="accountRiskVerified">I verified account risk, stop distance and position size.</label></div>
-    <div class="check"><input id="brokerVerified" type="checkbox"><label for="brokerVerified">I verified the broker/platform and current account conditions.</label></div>
-    <label for="setupNotes">Setup notes</label>
-    <textarea id="setupNotes" rows="4" maxlength="1000" placeholder="Structure, entry trigger, invalidation, stop, target and event risk"></textarea>
-    <div class="actions"><button id="savePlan" class="primary">Save checklist</button><button id="resetPlan">Reset checklist</button></div>
-    <p class="notice">This app does not connect to MT5, read your account balance, validate your broker, or place/block broker orders. The checklist relies on your confirmations.</p>
-  </div>
-</section>
-
-<section id="journal" class="page hidden">
-  <div class="card">
-    <h2>Manual trade journal</h2>
-    <p class="muted small">Entries are saved in this browser on this device. Browser data can be lost; export a CSV backup regularly.</p>
-    <form id="journalForm">
-      <input id="tradeId" type="hidden">
-      <label for="tradeDate">Date and time</label>
-      <input id="tradeDate" type="datetime-local" required>
-      <label for="tradeSide">Direction</label>
-      <select id="tradeSide"><option>Buy</option><option>Sell</option><option>Demo / no trade</option></select>
-      <div class="grid">
-        <div><label for="tradeEntry">Entry price</label><input id="tradeEntry" type="number" step="any" placeholder="Optional"></div>
-        <div><label for="tradeExit">Exit price</label><input id="tradeExit" type="number" step="any" placeholder="Optional"></div>
-        <div><label for="tradeRisk">Risk (account currency)</label><input id="tradeRisk" type="number" min="0" step="any" placeholder="Optional"></div>
-        <div><label for="tradeResult">Result (account currency)</label><input id="tradeResult" type="number" step="any" placeholder="Optional"></div>
-      </div>
-      <label for="tradeReason">Setup, execution and lesson</label>
-      <textarea id="tradeReason" rows="3" maxlength="1500" placeholder="Why did you take it? Did you follow your rules?"></textarea>
-      <div class="actions"><button class="primary" type="submit">Save journal entry</button><button type="button" id="cancelEdit">Clear form</button></div>
-    </form>
-  </div>
-  <div class="card">
-    <h2>Journal records</h2>
-    <div id="journalSummary" class="muted small">No records yet.</div>
-    <div class="actions"><button id="exportCsv" class="primary">Export CSV backup</button><button id="deleteAllTrades" class="danger">Delete all entries</button></div>
-    <div id="journalList"></div>
-  </div>
-</section>
-
-<section id="risk" class="page hidden">
-  <div class="card">
-    <h2>Daily loss guard</h2>
-    <p class="muted small">Simulation only. Enter values in the same account currency. This does not read your broker balance or block real orders.</p>
-    <label for="dailyLimit">Daily loss limit</label>
-    <input id="dailyLimit" type="number" min="0.01" step="any" value="100">
-    <label for="dailyLoss">Loss accumulated today (positive amount)</label>
-    <input id="dailyLoss" type="number" min="0" step="any" value="0">
-    <div class="actions"><button id="checkLoss" class="primary">Check loss guard</button><button id="resetLoss">Reset simulation</button></div>
-    <div id="lossResult" class="status">Loss limit has not been checked.</div>
-  </div>
-  <div class="card">
-    <h2>Failure-test laboratory</h2>
-    <p class="muted small">These are simulated local logic tests, not live-feed, network infrastructure, macro-provider or broker integration tests.</p>
-    <button id="runTestsAgain" class="primary">Run all local tests</button>
-    <div id="testSummary" class="muted" style="margin-top:12px">Tests have not been run in this page session.</div>
-    <div id="testResults"></div>
-  </div>
-  <div class="card">
-    <h2>Current limitations</h2>
-    <ul class="muted small">
-      <li>Gold data depends on an external endpoint and browser CORS/network access.</li>
-      <li>Macro data and news are manually entered; no verified live news feed is integrated.</li>
-      <li>Risk controls are not connected to your broker or MT5.</li>
-      <li>Journal records stay in this browser unless exported.</li>
-      <li>Local tests simulate failures; they do not prove every real-world failure is handled.</li>
-    </ul>
-  </div>
-</section>
-</main>
-  
-<script>
-(function () {
-  "use strict";
-
-  function runInkabiLocalTests() {
-    const results = [
-      {
-        name: "Stale market data",
-        expected: "Old or unknown-age quotes must be rejected.",
-        pass: (age, stale) =>
-          stale === true || !Number.isFinite(age) || age > 120000
-      },
-      {
-        name: "Gold reverses after news",
-        expected: "A changed direction invalidates the previous bias.",
-        pass: (oldBias, newBias) =>
-          oldBias !== newBias
-      },
-      {
-        name: "Daily loss limit",
-        expected: "New entries are denied at or above the limit.",
-        pass: (loss, limit) =>
-          Number.isFinite(loss) &&
-          Number.isFinite(limit) &&
-          limit > 0 &&
-          loss >= limit
-      },
-      {
-        name: "Internet disconnects",
-        expected: "Offline status must trigger a monitoring warning.",
-        pass: (online) => online === false
-      },
-      {
-        name: "Conflicting macro signals",
-        expected: "Disagreement must produce NO-GO.",
-        pass: (signals) =>
-          signals.some(s => s === "unknown") ||
-          signals.some(s => s === "conflict") ||
-          new Set(signals).size > 1
-      }
-    ];
-
-    const checks = [
-      results[0].pass(180000, false),
-      results[1].pass("bullish", "bearish"),
-      results[2].pass(100, 100),
-      results[3].pass(false),
-      results[4].pass(["bullish", "bearish", "unknown"])
-    ];
-
-    const output = document.getElementById("testResults");
-    const summary = document.getElementById("testSummary");
-
-    if (!output || !summary) {
-      alert("INKABI.21 test output area not found.");
-      return;
-    }
-
-    output.replaceChildren();
-
-    checks.forEach((passed, index) => {
-      const row = document.createElement("div");
-      row.className = "test";
-
-      const heading = document.createElement("strong");
-      heading.textContent =
-        (passed ? "PASS — " : "FAIL — ") + results[index].name;
-
-      const detail = document.createElement("p");
-      detail.className = "muted small";
-      detail.textContent = results[index].expected;
-
-      row.append(heading, detail);
-      output.appendChild(row);
-    });
-
-    const passedCount = checks.filter(Boolean).length;
-    summary.textContent =
-      passedCount + " of " + checks.length +
-      " simulated logic checks passed. These are not live integration tests.";
-
-    summary.className =
-      passedCount === checks.length ? "status good" : "status warn";
-  }
-
-  const homeButton = document.getElementById("testBtn");
-  const riskButton = document.getElementById("runTestsAgain");
-
-  if (homeButton) homeButton.onclick = runInkabiLocalTests;
-  if (riskButton) riskButton.onclick = runInkabiLocalTests;
-})();
-</script>
-  
-<footer>INKABI.21 · Evidence before execution · No automated trading</footer>
-
-<script>
-"use strict";
-
-/* Configuration: quote freshness threshold is 120 seconds. */
-const CONFIG = Object.freeze({
-  feedUrl: "https://xaus.com/api/v1/spot",
-  refreshMs: 60000,
-  timeoutMs: 10000,
-  maxQuoteAgeSeconds: 120,
-  maxFutureSeconds: 60,
-  journalKey: "inkabi21_journal_v1",
-  macroKey: "inkabi21_macro_v1",
-  planKey: "inkabi21_plan_v1"
-});
-
-const $ = id => document.getElementById(id);
-const state = {
-  quote: null,
-  quoteFresh: false,
-  fetching: false,
-  lastAttempt: null,
-  feedMessage: "Waiting for initial refresh.",
-  macro: null,
-  lastTests: null
-};
-
-function safeText(value) {
-  return String(value ?? "");
-}
-function setText(id, value) {
-  $(id).textContent = safeText(value);
-}
-function dateLabel(date) {
-  if (!date || !Number.isFinite(date.getTime())) return "Not available";
-  return date.toLocaleString();
-}
-function validPositiveNumber(value) {
-  const n = Number(value);
-  return value !== null && value !== "" && Number.isFinite(n) && n > 0;
-}
-function online() {
-  return navigator.onLine === true;
-}
-
-/* Accepts the provider response previously observed:
-   {price:"4182.83", is_stale:false, computed_at:"..."} */
-function validateQuote(data, nowMs = Date.now()) {
-  if (!data || typeof data !== "object") {
-    return { ok:false, reason:"Invalid or missing response." };
-  }
-
-  const rawPrice =
-    data.spot_usd_oz ??
-    data.price ??
-    data.xau?.price;
-
-  if (!validPositiveNumber(rawPrice)) {
-    return { ok:false, reason:"Price missing, invalid or not positive." };
-  }
-
-  const staleFlag =
-    data.is_stale === true ||
-    data.stale === true ||
-    data.fx_stale === true ||
-    data.data_state?.status === "stale";
-
-  if (staleFlag) {
-    return { ok:false, reason:"Provider marked this quote stale." };
-  }
-
-  const rawTimestamp =
-    data.price_as_of ??
-    data.provider_timestamp ??
-    data.computed_at ??
-    data.updated_at ??
-    data.timestamp ??
-    data.xau?.computed_at;
-
-  if (!rawTimestamp) {
-    return { ok:false, reason:"Provider timestamp is missing." };
-  }
-
-  let timestampMs;
-  if (typeof rawTimestamp === "number") {
-    timestampMs = rawTimestamp < 1e12 ? rawTimestamp * 1000 : rawTimestamp;
-  } else {
-    timestampMs = Date.parse(rawTimestamp);
-  }
-
-  if (!Number.isFinite(timestampMs)) {
-    return { ok:false, reason:"Provider timestamp is invalid." };
-  }
-
-  const ageSeconds = (nowMs - timestampMs) / 1000;
-
-  if (ageSeconds < -CONFIG.maxFutureSeconds) {
-    return { ok:false, reason:"Provider timestamp is too far in the future." };
-  }
-  if (ageSeconds < 0) {
-    return { ok:false, reason:"Provider timestamp is ahead of this device clock." };
-  }
-  if (ageSeconds > CONFIG.maxQuoteAgeSeconds) {
-    return { ok:false, reason:"Quote is stale: older than 120 seconds." };
-  }
-
-  return {
-    ok:true,
-    price:Number(rawPrice),
-    timestampMs,
-    ageSeconds,
-    currency:data.quote_currency || "USD",
-    unit:data.unit || "troy_ounce",
-    symbol:data.symbol || "XAU"
-  };
-}
-
-/* One shared decision gate is used by the UI and the test laboratory. */
-function evaluateSafety(input) {
-  const reasons = [];
-
-  if (!input.online) reasons.push("Internet connection unavailable.");
-  if (!input.quoteFresh) reasons.push("Gold quote is not verified fresh.");
-  if (!input.macroVerified) reasons.push("Macro evidence is not verified.");
-  if (input.macroBias === "conflict" || input.macroBias === "unknown") {
-    reasons.push("Macro signals are conflicting or unconfirmed.");
-  }
-  if (!input.newsClear) reasons.push("News reversal/event risk is unresolved.");
-  if (input.dailyLossReached) reasons.push("Daily loss limit reached.");
-  if (!input.brokerVerified) reasons.push("Broker conditions are not verified.");
-  if (!input.accountRiskVerified) reasons.push("Account risk is not verified.");
-  if (!input.strategyConfirmed) reasons.push("Setup lacks confirmation.");
-
-  return {
-    status: reasons.length === 0 ? "GO" : "NO-GO",
-    reasons
-  };
-}
-
-function getDailyLossState(limitValue, lossValue) {
-  const limit = Number(limitValue);
-  const loss = Number(lossValue);
-
-  if (!Number.isFinite(limit) || limit <= 0) {
-    return { valid:false, reached:true, message:"Enter a daily loss limit greater than zero." };
-  }
-  if (!Number.isFinite(loss) || loss < 0) {
-    return { valid:false, reached:true, message:"Loss must be zero or a positive amount." };
-  }
-  if (loss >= limit) {
-    return { valid:true, reached:true, message:"LIMIT REACHED — new entries should be stopped under your configured rules." };
-  }
-  return {
-    valid:true,
-    reached:false,
-    message:"Within the simulated limit. Remaining allowance: " +
-      (limit-loss).toLocaleString(undefined,{maximumFractionDigits:2})
-  };
-}
-
-function macroIsVerified() {
-  return !!(
-    state.macro &&
-    state.macro.verified === true &&
-    state.macro.source.trim() &&
-    state.macro.time.trim() &&
-    ["bullish","bearish"].includes(state.macro.bias)
-  );
-}
-
-function currentGate() {
-  const loss = getDailyLossState($("dailyLimit").value, $("dailyLoss").value);
-  return evaluateSafety({
-    online:online(),
-    quoteFresh:state.quoteFresh && !!state.quote,
-    macroVerified:macroIsVerified(),
-    macroBias:macroIsVerified() ? state.macro.bias : "unknown",
-    newsClear:$("newsClear").checked,
-    dailyLossReached:!loss.valid || loss.reached,
-    brokerVerified:$("brokerVerified").checked,
-    accountRiskVerified:$("accountRiskVerified").checked,
-    strategyConfirmed:$("strategyConfirmed").checked
-  });
-}
-
-function renderDecision() {
-  const gate = currentGate();
-  setText("decision", gate.status);
-  setText("decisionReason", gate.status === "GO"
-    ? "All configured checklist conditions passed. This is not a price prediction."
-    : gate.reasons.join(" "));
-  $("decision").className = gate.status === "GO" ? "go" : "no-go";
-  $("decisionBox").style.borderColor = gate.status === "GO" ? "#347a5d" : "#713e43";
-  setText("homeMacro", macroIsVerified() ? "Manually verified" : "Unconfirmed");
-  const loss = getDailyLossState($("dailyLimit").value, $("dailyLoss").value);
-  setText("homeRisk", loss.valid && !loss.reached ? "Within simulated limit" : "STOP / CHECK");
-  setText("connection", online() ? "ONLINE" : "OFFLINE");
-  $("connection").style.color = online() ? "var(--green)" : "var(--red)";
-  re
+const
